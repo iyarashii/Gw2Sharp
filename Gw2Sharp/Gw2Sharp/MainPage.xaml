@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                   x:Class="Gw2Sharp.MainPage"
+                   Title="Main Menu">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="20, 40, 20, 20" />
+            <On Platform="Android, UWP" Value="20" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <StackLayout>                
+        <Button x:Name="gemExchange" Text="Gem Exchange" Clicked="OnGemExchange" />        
+        <Button x:Name="tradingPost" Text="Trading Post" Clicked="OnTradingPost" />        
+    </StackLayout>
+</ContentPage>
