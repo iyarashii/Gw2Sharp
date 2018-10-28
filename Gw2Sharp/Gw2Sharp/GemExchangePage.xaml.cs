@@ -14,11 +14,11 @@ namespace Gw2Sharp
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class GemExchangePage : ContentPage
 	{
-        public string gemInfo { get; set; }
+        public string GemInfo { get; set; }
         public GemExchangePage()
 		{
             InitializeComponent();
-            gemInfo = "Current gem to gold exchange:";
+            GemInfo = "Current gem to gold exchange:";
             BindingContext = this;
         }
 
@@ -26,11 +26,11 @@ namespace Gw2Sharp
         void OnCalculateGoldToGems(object sender, EventArgs e)
         {
             BindingContext = null;
-            gemInfo = "Current gem to gold exchange:\n";
+            GemInfo = "Current gem to gold exchange:\n";
             IBroker<GemQuotation> service = GW2.V2.Commerce.Exchange.ForCurrency("coins");
             if (!double.TryParse(goldAmount.Text, out double coins))
             {
-                gemInfo += goldAmount.Text + " is not a number.";
+                GemInfo += goldAmount.Text + " is not a number.";
                 BindingContext = this;
                 return;
             }
@@ -42,32 +42,32 @@ namespace Gw2Sharp
             }
             catch (ServiceException)
             {
-                gemInfo += "too few coins.";
+                GemInfo += "too few coins.";
                 BindingContext = this;
                 return;
             }
             catch (OverflowException)
             {
-                gemInfo += "too many coins.";
+                GemInfo += "too many coins.";
                 BindingContext = this;
                 return;
             }
             catch (TaskCanceledException)
             {
-                gemInfo += "Unknown exception!";
+                GemInfo += "Unknown exception!";
                 BindingContext = this;
                 return;
             }
             
             double goldPerGemRatio = quotation.CoinsPerGem / 10000.0;
-            gemInfo += "Gold per gem: " + goldPerGemRatio + "\n";
-            gemInfo += "Send: " + quotation.Send / 10000.0 + " gold\n";
-            gemInfo += "To receive: " + quotation.Receive + " gems\n";
-            gemInfo += "For 400 gems you have to pay about " + goldPerGemRatio * 400 + " gold\n";
-            gemInfo += "For 800 gems you have to pay about " + goldPerGemRatio * 800 + " gold\n";
-            gemInfo += "For 1200 gems you have to pay about " + goldPerGemRatio * 1200 + " gold\n";
-            gemInfo += "For 2000 gems you have to pay about " + goldPerGemRatio * 2000 + " gold\n";
-            gemInfo += "Timestamp: " + quotation.Timestamp + "\n";
+            GemInfo += "Gold per gem: " + goldPerGemRatio + "\n";
+            GemInfo += "Send: " + quotation.Send / 10000.0 + " gold\n";
+            GemInfo += "To receive: " + quotation.Receive + " gems\n";
+            GemInfo += "For 400 gems you have to pay about " + goldPerGemRatio * 400 + " gold\n";
+            GemInfo += "For 800 gems you have to pay about " + goldPerGemRatio * 800 + " gold\n";
+            GemInfo += "For 1200 gems you have to pay about " + goldPerGemRatio * 1200 + " gold\n";
+            GemInfo += "For 2000 gems you have to pay about " + goldPerGemRatio * 2000 + " gold\n";
+            GemInfo += "Timestamp: " + quotation.Timestamp + "\n";
             BindingContext = this;
         }
     }

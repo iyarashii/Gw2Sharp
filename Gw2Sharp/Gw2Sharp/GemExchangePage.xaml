@@ -14,7 +14,7 @@
             <Label Text="Enter amount of gold you want to know the gem exchange ratio for:" />
             <Entry x:Name="goldAmount" Text="" />
             <Button x:Name="calculateGoldToGem" Text="Calculate gold to gem price" Clicked="OnCalculateGoldToGems" />
-            <Label Text="{Binding gemInfo}" />
+            <Label Text="{Binding GemInfo}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
