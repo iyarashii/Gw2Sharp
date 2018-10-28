@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Net.Http;
 
 namespace Gw2Sharp
 {
  
     public partial class MainPage : ContentPage
-    {        
+    {
         
         public MainPage()
         {                   
