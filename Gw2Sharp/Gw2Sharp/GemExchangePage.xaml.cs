@@ -14,14 +14,22 @@ namespace Gw2Sharp
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class GemExchangePage : ContentPage
 	{
-        public string GemInfo { get; set; }
+        public string GemToGoldExchangeStatusText { get; set; }
+        public string SendGoldText { get; set; }
+        public string ReceiveGemText { get; set; }
+        public string GoldPerGemText { get; set; }
+        public string PriceOf400Gems { get; set; }
+        public string PriceOf800Gems { get; set; }
+        public string PriceOf1200Gems { get; set; }
+        public string PriceOf2000Gems { get; set; }
+        public double TextHeight { get { return gemToGoldExchangeStatusText.Height; } }
 
         private static readonly HttpClient client = new HttpClient();
 
         public GemExchangePage()
 		{
             InitializeComponent();
-            GemInfo = "Current gem to gold exchange:";
+            GemToGoldExchangeStatusText = "Current gem to gold exchange:";
             BindingContext = this;
         }
         public static bool CheckForInternetConnection()
@@ -43,63 +51,63 @@ namespace Gw2Sharp
         async void OnCalculateGoldToGems(object sender, EventArgs e)
         {
             BindingContext = null;
+            SendGoldText = null;
+            ReceiveGemText = null;
+            GoldPerGemText = null;
+            responseTextLayout.IsVisible = false;
 
             if (!CheckForInternetConnection())
             {
-                GemInfo = "No internet connection!";
+                GemToGoldExchangeStatusText = "No internet connection!";
                 BindingContext = this;
                 return;
             }
 
-            GemInfo = "Current gem to gold exchange:\n";     
+            GemToGoldExchangeStatusText = "Current gem to gold exchange:";     
             
             if (!double.TryParse(goldAmount.Text, out double coins))
             {
-                GemInfo = goldAmount.Text + " is not a number.";
+                GemToGoldExchangeStatusText = goldAmount.Text + " is not a number.";
                 BindingContext = this;
                 return;
             }
             coins = Convert.ToDouble(goldAmount.Text) * 10000.0;            
-            //GemInfo += coins.ToString() + "\n";            
+                     
             string apiResponse;
             string apiGemLink = "https://api.guildwars2.com/v2/commerce/exchange/coins?quantity=" + coins;
             //var json = new WebClient().DownloadString(apiGemLink);   
             
             try
             {
-                var responseString = await client.GetStringAsync(apiGemLink);
-                apiResponse = responseString;
-                /*
-                using (WebClient wc = new WebClient())
-                {
-                    var json = wc.DownloadString(apiGemLink);                     
-                    apiResponse = json;
-                }
-                */
+                apiResponse = await client.GetStringAsync(apiGemLink);
+                //apiResponse = responseString;                
             }
             catch (HttpRequestException)
-            {                
-                GemInfo =  coins > 10000.0 ? "too many coins!" : "too few coins!";
+            {
+                GemToGoldExchangeStatusText =  coins > 10000.0 ? "too many coins!" : "too few coins!";
                 BindingContext = this;
                 return;
             }            
             catch (Exception)
             {
-                GemInfo += "Unknown exception!";
+                GemToGoldExchangeStatusText = "Unknown exception!";
                 BindingContext = this;
                 return;
             }
             GemExchangeRate gemResponse = JsonConvert.DeserializeObject<GemExchangeRate>(apiResponse);
-            
-            GemInfo += "Send: " + coins / 10000.0 + " gold\n";
-            GemInfo += "To receive: " + gemResponse.Quantity + " gems\n";
+
+            responseTextLayout.IsVisible = true;
+            //goldImage.HeightRequest = gemToGoldExchangeStatusText.Height;
+            //gemImage.HeightRequest = gemToGoldExchangeStatusText.Height;
+
+            SendGoldText = "Send: " + coins / 10000.0;
+            ReceiveGemText = "To receive: " + gemResponse.Quantity;
             double goldPerGemRatio = gemResponse.Coins_per_gem / 10000.0;
-            GemInfo += "Gold per gem: " + goldPerGemRatio + "\n";
-            GemInfo += "For 400 gems you have to pay about " + goldPerGemRatio * 400 + " gold\n";
-            GemInfo += "For 800 gems you have to pay about " + goldPerGemRatio * 800 + " gold\n";
-            GemInfo += "For 1200 gems you have to pay about " + goldPerGemRatio * 1200 + " gold\n";
-            GemInfo += "For 2000 gems you have to pay about " + goldPerGemRatio * 2000 + " gold\n";
-            
+            GoldPerGemText = "Gold per gem: " + goldPerGemRatio;
+            PriceOf400Gems = "you have to pay about " + goldPerGemRatio * 400;
+            PriceOf800Gems = "you have to pay about " + goldPerGemRatio * 800;
+            PriceOf1200Gems = "you have to pay about " + goldPerGemRatio * 1200;
+            PriceOf2000Gems = "you have to pay about " + goldPerGemRatio * 2000;
             BindingContext = this;
         }
     }

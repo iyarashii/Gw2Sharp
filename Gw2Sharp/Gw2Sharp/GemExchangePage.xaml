@@ -14,7 +14,49 @@
             <Label Text="Enter amount of gold you want to know the gem exchange ratio for:" />
             <Entry x:Name="goldAmount" Text="" />
             <Button x:Name="calculateGoldToGem" Text="Calculate gold to gem price" Clicked="OnCalculateGoldToGems" />
-            <Label Text="{Binding GemInfo}" />
+            <StackLayout Spacing="0">
+                <Label x:Name="gemToGoldExchangeStatusText" Text="{Binding GemToGoldExchangeStatusText}" />
+                <StackLayout x:Name="responseTextLayout" Spacing="0" IsVisible="False">
+                    <StackLayout Orientation="Horizontal">
+                        <Label x:Name="goldText" Text="{Binding SendGoldText}" HorizontalOptions="Start" />
+                        <Image x:Name="goldImage" Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label x:Name="gemText" Text="{Binding ReceiveGemText}" HorizontalOptions="Start" />
+                        <Image x:Name="gemImage" Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="{Binding GoldPerGemText}" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                        <Label Text="per 1" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="For 400" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                        <Label Text="{Binding PriceOf400Gems}" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="For 800" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                        <Label Text="{Binding PriceOf800Gems}" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="For 1200" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                        <Label Text="{Binding PriceOf1200Gems}" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="For 2000" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                        <Label Text="{Binding PriceOf2000Gems}" HorizontalOptions="Start" />
+                        <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
