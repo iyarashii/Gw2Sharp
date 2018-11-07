@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="GemExchangePage.xaml">
+    <EmbeddedResource Update="Source\GemExchangePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="TradingPostPage.xaml">
+    <EmbeddedResource Update="Source\TradingPostPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
