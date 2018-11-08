@@ -36,8 +36,34 @@ namespace Gw2Sharp
                 return;
             }
 
+            string itemID;
             string apiResponse;
-            string apiItemLink = "https://api.guildwars2.com/v2/items/" + itemName.Text;
+            //string apiItemLink = "https://api.guildwars2.com/v2/items/" + itemName.Text;
+            string gw2spidyLink = "http://www.gw2spidy.com/search/" + itemName.Text;
+
+            try
+            {
+                itemID = await InternetConnection.client.GetStringAsync(gw2spidyLink);
+            }
+            catch (HttpRequestException)
+            {
+                iconText.Text = "No such id";
+                BindingContext = this;
+                return;
+            }
+            catch (Exception)
+            {
+                iconText.Text = "Unknown exception!";
+                BindingContext = this;
+                return;
+            }
+
+            string startIndex = "data-id=\"";
+           // string testStr = itemID;
+            itemID = itemID.Substring(itemID.IndexOf(startIndex) + startIndex.Length);
+            itemID = itemID.Substring(0, itemID.IndexOf("\""));
+
+            string apiItemLink = "https://api.guildwars2.com/v2/items/" + itemID;
 
             try
             {
@@ -59,9 +85,16 @@ namespace Gw2Sharp
             {
                 iconText.IsVisible = true;
             }
+
             Weapon.RootObject apiItemDetails = JsonConvert.DeserializeObject<Weapon.RootObject>(apiResponse);
             ItemDetailsText = "Name: " + apiItemDetails.name;
-            ItemDetailsText += "\ndescription:" + apiItemDetails.description;
+            ItemDetailsText += "\ndescription: " + apiItemDetails.description;
+            ItemDetailsText += "\ntype: " + apiItemDetails.type;
+            ItemDetailsText += "\nlevel: " + apiItemDetails.level + "\n";
+            ItemDetailsText += "rarity: " + apiItemDetails.rarity + "\n";
+            ItemDetailsText += "vendor value: " + apiItemDetails.vendor_value + "\n";
+            ItemDetailsText += "default skin: " + apiItemDetails.default_skin + "\n";
+            ItemDetailsText += "chat link: " + apiItemDetails.chat_link + "\n";
             ItemIconLink = apiItemDetails.icon;            
             responseTextLayout.IsVisible = true;
             BindingContext = this;

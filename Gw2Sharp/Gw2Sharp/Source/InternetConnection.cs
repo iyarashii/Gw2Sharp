@@ -9,8 +9,10 @@ namespace Gw2Sharp.Source
     class InternetConnection
     {
         public static readonly HttpClient client = new HttpClient();
+        
         public static bool CheckForInternetConnection()
         {
+            
             try
             {
                 using (var client = new WebClient())
