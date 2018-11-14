@@ -86,15 +86,16 @@ namespace Gw2Sharp
                 iconText.IsVisible = true;
             }
 
+            ItemType apiResponseItemType = JsonConvert.DeserializeObject<ItemType>(apiResponse);
             Weapon.RootObject apiItemDetails = JsonConvert.DeserializeObject<Weapon.RootObject>(apiResponse);
             ItemDetailsText = "Name: " + apiItemDetails.name;
-            ItemDetailsText += "\ndescription: " + apiItemDetails.description;
-            ItemDetailsText += "\ntype: " + apiItemDetails.type;
-            ItemDetailsText += "\nlevel: " + apiItemDetails.level + "\n";
-            ItemDetailsText += "rarity: " + apiItemDetails.rarity + "\n";
-            ItemDetailsText += "vendor value: " + apiItemDetails.vendor_value + "\n";
-            ItemDetailsText += "default skin: " + apiItemDetails.default_skin + "\n";
-            ItemDetailsText += "chat link: " + apiItemDetails.chat_link + "\n";
+            ItemDetailsText += "\nDescription: " + apiItemDetails.description;
+            ItemDetailsText += "\nItem type: " + apiItemDetails.type;
+            ItemDetailsText += "\nLevel: " + apiItemDetails.level + "\n";
+            ItemDetailsText += "Rarity: " + apiItemDetails.rarity + "\n";
+            ItemDetailsText += "Vendor value: " + apiItemDetails.vendor_value + "\n";
+            ItemDetailsText += "Default skin: " + apiItemDetails.default_skin + "\n";
+            ItemDetailsText += "Chat link: " + apiItemDetails.chat_link + "\n";
             ItemIconLink = apiItemDetails.icon;            
             responseTextLayout.IsVisible = true;
             BindingContext = this;

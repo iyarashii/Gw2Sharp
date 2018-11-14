@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Gw2Sharp.Source
 {
-    class Weapon
+    class Armor
     {
         public class InfusionSlot
         {
@@ -26,9 +26,7 @@ namespace Gw2Sharp.Source
         public class Details
         {
             public string type { get; set; }
-            public string damage_type { get; set; }
-            public int min_power { get; set; }
-            public int max_power { get; set; }
+            public string weight_class { get; set; }
             public int defense { get; set; }
             public List<InfusionSlot> infusion_slots { get; set; }
             public InfixUpgrade infix_upgrade { get; set; }
