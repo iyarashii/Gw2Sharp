@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Source
+namespace Gw2Sharp.Schemas
 {
     class Armor
     {

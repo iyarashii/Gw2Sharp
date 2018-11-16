@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Source
+namespace Gw2Sharp.Schemas
 {
-    class BackItem
+    class UpgradeComponent
     {
-        public class InfusionSlot
+        public class Buff
         {
-            public List<string> flags { get; set; }
+            public int skill_id { get; set; }
+            public string description { get; set; }
         }
 
         public class Attribute
@@ -20,14 +21,17 @@ namespace Gw2Sharp.Source
         public class InfixUpgrade
         {
             public int id { get; set; }
+            public Buff buff { get; set; }
             public List<Attribute> attributes { get; set; }
         }
 
         public class Details
         {
-            public List<InfusionSlot> infusion_slots { get; set; }
-            public string secondary_suffix_item_id { get; set; }
-            public List<int> stat_choices { get; set; }
+            public string type { get; set; }
+            public List<string> flags { get; set; }
+            public List<string> infusion_upgrade_flags { get; set; }
+            public InfixUpgrade infix_upgrade { get; set; }
+            public string suffix { get; set; }
         }
 
         public class RootObject
@@ -38,7 +42,6 @@ namespace Gw2Sharp.Source
             public int level { get; set; }
             public string rarity { get; set; }
             public int vendor_value { get; set; }
-            public int default_skin { get; set; }
             public List<string> game_types { get; set; }
             public List<string> flags { get; set; }
             public List<object> restrictions { get; set; }

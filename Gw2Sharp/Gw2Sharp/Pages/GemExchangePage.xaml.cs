@@ -8,7 +8,7 @@ using Xamarin.Forms.Xaml;
 using System.Net;
 using Newtonsoft.Json;
 using System.Net.Http;
-using Gw2Sharp.Source;
+using Gw2Sharp.Schemas;
 
 namespace Gw2Sharp
 {
@@ -33,21 +33,7 @@ namespace Gw2Sharp
             GemToGoldExchangeStatusText = "Current gem to gold exchange:";
             BindingContext = this;
         }
-        //public static bool CheckForInternetConnection()
-        //{
-        //    try
-        //    {
-        //        using (var client = new WebClient())
-        //        using (client.OpenRead("http://clients3.google.com/generate_204"))
-        //        {
-        //            return true;
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        return false;
-        //    }
-        //}
+
        
         async void OnCalculateGoldToGems(object sender, EventArgs e)
         {

@@ -2,23 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Source
+namespace Gw2Sharp.Schemas
 {
-    class Consumable
+    class CraftingMaterial
     {
-        public class Details
-        {
-            public string type { get; set; }
-            public int duration_ms { get; set; }
-            public int apply_count { get; set; }
-            public string name { get; set; }
-            public string icon { get; set; }
-            public string description { get; set; }
-        }
-
         public class RootObject
         {
             public string name { get; set; }
+            public string description { get; set; }
             public string type { get; set; }
             public int level { get; set; }
             public string rarity { get; set; }
@@ -29,7 +20,6 @@ namespace Gw2Sharp.Source
             public int id { get; set; }
             public string chat_link { get; set; }
             public string icon { get; set; }
-            public Details details { get; set; }
         }
     }
 }
