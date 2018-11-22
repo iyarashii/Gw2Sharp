@@ -14,6 +14,8 @@
             <Label Text="Enter item name to check its Trading Post price:"/>
             <Entry x:Name="itemName" Text="" />
             <Button x:Name="showItem" Text="Show item details" Clicked="OnShowItem" />
+            <Button x:Name="showItemPrice" Text="Show item trading post price" Clicked="OnItemTradingPostPrice" />
+            <Button x:Name="saveItemDB" Text="Save item name and id list" Clicked="OnSaveItem" />
             <StackLayout Spacing="0">
                 <Label x:Name="iconText" Text="Icon:" IsVisible="False"/>
                 <StackLayout x:Name="responseTextLayout" Spacing="0" IsVisible="False">
