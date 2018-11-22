@@ -67,7 +67,8 @@ namespace Gw2Sharp
                     BindingContext = this;
                     return;
                 }
-
+                saveItemDB.Text = "Getting api responses in progress... " + "(" + i + "/" + "269)";
+                BindingContext = this;
                 List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
                 for (int x = 0; x < itemNamesAndIds.Count; x++)
                 {
@@ -77,6 +78,8 @@ namespace Gw2Sharp
             }
           
             File.WriteAllText(ItemDBPath, itemDatabase);
+            saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
+            BindingContext = this;
         }
 
         async void OnShowItem(object sender, EventArgs e)
