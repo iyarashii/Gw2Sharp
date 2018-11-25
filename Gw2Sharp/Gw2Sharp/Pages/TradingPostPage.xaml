@@ -10,19 +10,46 @@
         </OnPlatform>
     </ContentPage.Padding>
     <ContentPage.Content>
+        <ScrollView>
         <StackLayout>
             <Label Text="Enter item name to check its Trading Post price:"/>
             <Entry x:Name="itemName" Text="" />
             <Button x:Name="showItem" Text="Show item details" Clicked="OnShowItem" />
-            <Button x:Name="showItemPrice" Text="Show item trading post price" Clicked="OnItemTradingPostPrice" />
-            <Button x:Name="saveItemDB" Text="Save item name and id list" Clicked="OnSaveItem" />
-            <StackLayout Spacing="0">
-                <Label x:Name="iconText" Text="Icon:" IsVisible="False"/>
-                <StackLayout x:Name="responseTextLayout" Spacing="0" IsVisible="False">
-                    <Image x:Name="apiIcon" Source="{Binding ItemIconLink}" HorizontalOptions="Start"/>
-                    <Label x:Name="itemDetailsText" Text="{Binding ItemDetailsText}" />
+            <Button x:Name="showItemPrice" Text="Show item trading post price" Clicked="OnShowItemPrice" />
+            <Button x:Name="saveItemDB" Text="Save item name and id list" Clicked="OnSaveItemDB" />
+            <StackLayout Orientation="Horizontal">
+                <StackLayout Spacing="0">
+                    <Label x:Name="statusText" Text="" IsVisible="False"/>
+                    <StackLayout x:Name="responseTextLayout" Spacing="0" IsVisible="False">
+                        <Label Text="Icon:"/>
+                        <Image x:Name="apiIcon" Source="{Binding ItemIconLink}" HorizontalOptions="Start"/>
+                        <Label x:Name="itemDetailsText" Text="{Binding ItemDetailsText}" />
+                    </StackLayout>
                 </StackLayout>
+                <StackLayout Spacing="0" x:Name="itemPriceLayout" HorizontalOptions="CenterAndExpand" IsVisible="False">
+                    <Label x:Name="itemPriceText" Text="{Binding ItemPriceText}"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Unit price:" HorizontalOptions="Start" />
+                            <Label x:Name="buysGoldText" Text="" HorizontalOptions="Start" />
+                            <Image x:Name="buysGoldCoinImage" Source="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png" HorizontalOptions="Start" IsVisible="False"/>
+                            <Label x:Name="buysSilverText" Text="" HorizontalOptions="Start" />
+                            <Image x:Name="buysSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png"  HorizontalOptions="Start" IsVisible="False"></Image>
+                            <Label x:Name="buysCopperText" Text="" HorizontalOptions="Start" />
+                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png"  HorizontalOptions="Start"></Image>
+                        </StackLayout>
+                    <Label x:Name="itemSellsPriceText" Text="{Binding ItemSellsPriceText}"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Unit price:" HorizontalOptions="Start" />
+                            <Label x:Name="sellsGoldText" Text="" HorizontalOptions="Start" />
+                            <Image x:Name="sellsGoldCoinImage" Source="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png" HorizontalOptions="Start" IsVisible="False"/>
+                            <Label x:Name="sellsSilverText" Text="" HorizontalOptions="Start" />
+                            <Image x:Name="sellsSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png"  HorizontalOptions="Start" IsVisible="False"></Image>
+                            <Label x:Name="sellsCopperText" Text="" HorizontalOptions="Start" />
+                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png"  HorizontalOptions="Start"></Image>
+                        </StackLayout>
+                    </StackLayout>
             </StackLayout>
         </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

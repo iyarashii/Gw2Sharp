@@ -17,31 +17,137 @@ namespace Gw2Sharp
 	public partial class TradingPostPage : ContentPage
 	{
         public string ItemDetailsText { get; set; }
+        public string ItemPriceText { get; set; }
+        public string ItemSellsPriceText { get; set; }
         public string ItemIconLink { get; set; }
+        public string ItemID { get; set; }
         public string ItemDBPath { get  { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.txt"); } }
         public TradingPostPage ()
 		{
 			InitializeComponent ();
 		}
-        void OnItemTradingPostPrice(object sender, EventArgs e)
+        bool CheckForInternetConnection()
         {
-            BindingContext = null;
-
-        }
-        async void OnSaveItem(object sender, EventArgs e)
-        {
-            //BindingContext = null;
-            //responseTextLayout.IsVisible = false;
-            //iconText.IsVisible = false;
-            //iconText.Text = "";
-
             if (!InternetConnection.CheckForInternetConnection())
             {
-                iconText.Text = "No internet connection!";
-                iconText.IsVisible = true;
+                statusText.Text = "No internet connection!";
+                statusText.IsVisible = true;
+                BindingContext = this;
+                return false;
+            }
+            return true;
+        }
+        bool CheckLocalItemDB()
+        {
+            string lineItemName = null;
+            foreach (string line in File.ReadLines(ItemDBPath))
+            {
+                lineItemName = line.Substring(line.IndexOf(" "));
+                if ((line.IndexOf(itemName.Text, StringComparison.InvariantCultureIgnoreCase) != -1) && (lineItemName.Length - 1 == itemName.Text.Length) && itemName.Text != "")
+                {
+                    ItemID = line.Substring(0, line.IndexOf(" "));
+                    break;
+                }
+            }
+            if (ItemID == null)
+            {
+                statusText.Text = "Item name not found in local item database!";
+                BindingContext = this;
+                statusText.IsVisible = true;
+                return false;
+            }
+            return true;
+        }
+        async void OnShowItemPrice(object sender, EventArgs e)
+        {
+            BindingContext = null;
+            string apiResponse;
+            itemPriceLayout.IsVisible = false;
+            buysGoldCoinImage.IsVisible = false;
+            buysSilverCoinImage.IsVisible = false;
+            sellsSilverCoinImage.IsVisible = false;
+            sellsGoldCoinImage.IsVisible = false;
+
+            if (!CheckForInternetConnection()) return;
+
+            if (!CheckLocalItemDB()) return;
+
+            string apiItemLink = "https://api.guildwars2.com/v2/commerce/prices/" + ItemID;
+
+            try
+            {
+                apiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
+            }
+            catch (HttpRequestException)
+            {
+                statusText.Text = "Wrong name or item can't be put on trading post.";
+                statusText.IsVisible = true;
                 BindingContext = this;
                 return;
             }
+            catch (Exception)
+            {
+                statusText.Text = "Unknown exception!";
+                statusText.IsVisible = true;
+                BindingContext = this;
+                return;
+            }
+            var apiItemPriceResponse = JsonConvert.DeserializeObject<ItemTpPrice.RootObject>(apiResponse);
+            string copperUnitPrice = null, silverUnitPrice = null, goldUnitPrice = null;
+            // BUYS
+            if (apiItemPriceResponse.buys.unit_price.ToString().Length >= 2)
+            {
+                copperUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(apiItemPriceResponse.buys.unit_price.ToString().Length - 2);
+                if (apiItemPriceResponse.buys.unit_price.ToString().Length >= 3)
+                {
+                    if(apiItemPriceResponse.buys.unit_price.ToString().Length == 3)
+                        silverUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(apiItemPriceResponse.buys.unit_price.ToString().Length - 3, 1);
+                    else silverUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(apiItemPriceResponse.buys.unit_price.ToString().Length - 4, 2);
+                    buysSilverCoinImage.IsVisible = true;
+                    if (apiItemPriceResponse.buys.unit_price.ToString().Length > 4)
+                    {
+                        goldUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(0, apiItemPriceResponse.buys.unit_price.ToString().Length - 4);
+                        buysGoldCoinImage.IsVisible = true;
+                    }
+                }
+            } 
+            else copperUnitPrice = apiItemPriceResponse.buys.unit_price.ToString();
+            buysGoldText.Text = goldUnitPrice;
+            buysSilverText.Text = silverUnitPrice;
+            buysCopperText.Text = copperUnitPrice;
+
+
+            // SELLS
+            if (apiItemPriceResponse.sells.unit_price.ToString().Length >= 2)
+            {
+                copperUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(apiItemPriceResponse.sells.unit_price.ToString().Length - 2);
+                if (apiItemPriceResponse.sells.unit_price.ToString().Length >= 3)
+                {
+                    if (apiItemPriceResponse.sells.unit_price.ToString().Length == 3)
+                        silverUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(apiItemPriceResponse.sells.unit_price.ToString().Length - 3, 1);
+                    else silverUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(apiItemPriceResponse.sells.unit_price.ToString().Length - 4, 2);
+                    sellsSilverCoinImage.IsVisible = true;
+                    if (apiItemPriceResponse.sells.unit_price.ToString().Length > 4)
+                    {
+                        goldUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(0, apiItemPriceResponse.sells.unit_price.ToString().Length - 4);
+                        sellsGoldCoinImage.IsVisible = true;
+                    }
+                }
+            }
+            else copperUnitPrice = apiItemPriceResponse.sells.unit_price.ToString();
+
+            ItemPriceText = "Buy orders:\n" + "Quantity: " + apiItemPriceResponse.buys.quantity;
+            ItemSellsPriceText = "Sell orders:\n" + "Quantity: " + apiItemPriceResponse.sells.quantity;
+            sellsGoldText.Text = goldUnitPrice;
+            sellsSilverText.Text = silverUnitPrice;
+            sellsCopperText.Text = copperUnitPrice;
+
+            BindingContext = this;
+            itemPriceLayout.IsVisible = true;
+        }
+        async void OnSaveItemDB(object sender, EventArgs e)
+        {
+            if (!CheckForInternetConnection()) return;
 
             string itemDatabase = null;
             string apiResponse = null;    
@@ -57,13 +163,13 @@ namespace Gw2Sharp
                 }
                 catch (HttpRequestException)
                 {
-                    iconText.Text = "No such id";
+                    statusText.Text = "Http request error!";
                     BindingContext = this;
                     return;
                 }
                 catch (Exception)
                 {
-                    iconText.Text = "Unknown exception!";
+                    statusText.Text = "Unknown exception!";
                     BindingContext = this;
                     return;
                 }
@@ -86,43 +192,35 @@ namespace Gw2Sharp
         {
             BindingContext = null;
             responseTextLayout.IsVisible = false;
-            iconText.IsVisible = false;
-            iconText.Text = "Icon:";
-            string itemID = null;
+            statusText.IsVisible = false;
             string apiResponse;
-            string itemLineName = null;
+           
+            if(!CheckForInternetConnection()) return;
 
-            if (!InternetConnection.CheckForInternetConnection())
-            {
-                iconText.Text = "No internet connection!";
-                iconText.IsVisible = true;
-                BindingContext = this;
-                return;
-            }
-            
-            foreach (string line in File.ReadLines(ItemDBPath))
-            {
-                itemLineName = line.Substring(line.IndexOf(" "));
-                if ( (line.IndexOf(itemName.Text, StringComparison.InvariantCultureIgnoreCase) != -1 ) && ( itemLineName.Length - 1 == itemName.Text.Length )) 
-                {
-                    itemID = line.Substring(0, line.IndexOf(" "));
-                    break;
-                }
-            }
-            if (itemID == null)
-            {
-                iconText.Text = "Item name not found in local item database!";
-                BindingContext = this;
-                iconText.IsVisible = true;
-                return;
-            }
-            
+            if(!CheckLocalItemDB()) return;
+            //foreach (string line in File.ReadLines(ItemDBPath))
+            //{
+            //    lineItemName = line.Substring(line.IndexOf(" "));
+            //    if ( (line.IndexOf(itemName.Text, StringComparison.InvariantCultureIgnoreCase) != -1 ) && ( lineItemName.Length - 1 == itemName.Text.Length )) 
+            //    {
+            //        itemID = line.Substring(0, line.IndexOf(" "));
+            //        break;
+            //    }
+            //}
+            //if (itemID == null)
+            //{
+            //    statusText.Text = "Item name not found in local item database!";
+            //    BindingContext = this;
+            //    statusText.IsVisible = true;
+            //    return;
+            //}
+
             //string gw2spidyLink = "http://www.gw2spidy.com/search/" + itemName.Text;          
             //string startIndex = "data-id=\"";
             //itemID = itemID.Substring(itemID.IndexOf(startIndex) + startIndex.Length);
             //itemID = itemID.Substring(0, itemID.IndexOf("\""));
 
-            string apiItemLink = "https://api.guildwars2.com/v2/items/" + itemID;
+            string apiItemLink = "https://api.guildwars2.com/v2/items/" + ItemID;
 
             try
             {
@@ -130,20 +228,19 @@ namespace Gw2Sharp
             }
             catch (HttpRequestException)
             {
-                iconText.Text = "No such id";
+                statusText.Text = "No such id";
+                statusText.IsVisible = true;
                 BindingContext = this;
                 return;
             }
             catch (Exception)
             {
-                iconText.Text = "Unknown exception!";
+                statusText.Text = "Unknown exception!";
+                statusText.IsVisible = true;
                 BindingContext = this;
                 return;
             }
-            finally
-            {
-                iconText.IsVisible = true;
-            }
+
             ItemType apiResponseItemType;
             try
             {
@@ -151,9 +248,9 @@ namespace Gw2Sharp
             }
             catch (JsonSerializationException)
             {
-                iconText.Text = "JsonSerialization exception!";
+                statusText.Text = "JsonSerialization exception!";
                 BindingContext = this;
-                iconText.IsVisible = true;
+                statusText.IsVisible = true;
                 return;
             }
 
@@ -292,7 +389,6 @@ namespace Gw2Sharp
                     ItemIconLink = apiUpgradeComponentItemDetails.icon;
                     break;
                 default:
-                    BindingContext = this;
                     return;
             }
             responseTextLayout.IsVisible = true;
