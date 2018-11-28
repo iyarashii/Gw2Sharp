@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Gw2Sharp.TradingPostPage"
+             x:Class="Gw2Sharp.Pages.TradingPostPage"
              Title="Trading Post">
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">
@@ -12,7 +12,7 @@
     <ContentPage.Content>
         <ScrollView>
         <StackLayout>
-            <Label Text="Enter item name to check its Trading Post price:"/>
+            <Label x:Name="enterItemNameText"  Text="Enter item name to check its Trading Post price:"/>
             <Entry x:Name="itemName" Text="" />
             <Button x:Name="showItem" Text="Show item details" Clicked="OnShowItem" />
             <Button x:Name="showItemPrice" Text="Show item trading post price" Clicked="OnShowItemPrice" />
@@ -33,19 +33,19 @@
                             <Label x:Name="buysGoldText" Text="" HorizontalOptions="Start" />
                             <Image x:Name="buysGoldCoinImage" Source="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png" HorizontalOptions="Start" IsVisible="False"/>
                             <Label x:Name="buysSilverText" Text="" HorizontalOptions="Start" />
-                            <Image x:Name="buysSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png"  HorizontalOptions="Start" IsVisible="False"></Image>
+                            <Image x:Name="buysSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png" HorizontalOptions="Start" IsVisible="False"></Image>
                             <Label x:Name="buysCopperText" Text="" HorizontalOptions="Start" />
-                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png"  HorizontalOptions="Start"></Image>
+                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png" HorizontalOptions="Start"></Image>
                         </StackLayout>
                     <Label x:Name="itemSellsPriceText" Text="{Binding ItemSellsPriceText}"/>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="Unit price:" HorizontalOptions="Start" />
                             <Label x:Name="sellsGoldText" Text="" HorizontalOptions="Start" />
-                            <Image x:Name="sellsGoldCoinImage" Source="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png" HorizontalOptions="Start" IsVisible="False"/>
+                            <Image x:Name="sellsGoldCoinImage" Source="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png"  HeightRequest="{Binding SellsGoldTextFontSize}" WidthRequest="{Binding SellsGoldTextFontSize}" HorizontalOptions="StartAndExpand" IsVisible="False"/>
                             <Label x:Name="sellsSilverText" Text="" HorizontalOptions="Start" />
-                            <Image x:Name="sellsSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png"  HorizontalOptions="Start" IsVisible="False"></Image>
+                            <Image x:Name="sellsSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png" HorizontalOptions="Start" IsVisible="False"></Image>
                             <Label x:Name="sellsCopperText" Text="" HorizontalOptions="Start" />
-                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png"  HorizontalOptions="Start"></Image>
+                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png" HorizontalOptions="Start"></Image>
                         </StackLayout>
                     </StackLayout>
             </StackLayout>

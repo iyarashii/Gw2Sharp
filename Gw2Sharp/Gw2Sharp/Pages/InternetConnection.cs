@@ -4,7 +4,7 @@ using System.Text;
 using System.Net.Http;
 using System.Net;
 
-namespace Gw2Sharp
+namespace Gw2Sharp.Pages
 {
     class InternetConnection
     {

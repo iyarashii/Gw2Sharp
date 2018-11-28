@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                   x:Class="Gw2Sharp.MainPage"
+                   x:Class="Gw2Sharp.Pages.MainPage"
                    Title="Main Menu">
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">
@@ -12,5 +12,6 @@
     <StackLayout>                
         <Button x:Name="gemExchange" Text="Gem Exchange" Clicked="OnGemExchange" />        
         <Button x:Name="tradingPost" Text="Trading Post" Clicked="OnTradingPost" />        
+        <Button x:Name="settingsButton" Text="Settings" Clicked="OnSettings" />        
     </StackLayout>
 </ContentPage>

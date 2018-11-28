@@ -11,7 +11,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.IO;
 
-namespace Gw2Sharp
+namespace Gw2Sharp.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TradingPostPage : ContentPage
@@ -21,6 +21,7 @@ namespace Gw2Sharp
         public string ItemSellsPriceText { get; set; }
         public string ItemIconLink { get; set; }
         public string ItemID { get; set; }
+        public double SellsGoldTextFontSize { get { return enterItemNameText.FontSize; } }
         public string ItemDBPath { get  { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.txt"); } }
         public TradingPostPage ()
 		{

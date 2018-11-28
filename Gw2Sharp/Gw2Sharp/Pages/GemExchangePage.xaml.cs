@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using Gw2Sharp.Schemas;
 
-namespace Gw2Sharp
+namespace Gw2Sharp.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class GemExchangePage : ContentPage

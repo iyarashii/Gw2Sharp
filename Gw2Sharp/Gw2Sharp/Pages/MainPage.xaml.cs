@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Net.Http;
 
-namespace Gw2Sharp
+
+namespace Gw2Sharp.Pages
 {
  
     public partial class MainPage : ContentPage
@@ -24,6 +25,10 @@ namespace Gw2Sharp
         async void OnTradingPost(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new TradingPostPage());
+        }
+        async void OnSettings(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ConfigurationPage());
         }
     }
 }
