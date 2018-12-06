@@ -16,7 +16,6 @@
             <Entry x:Name="itemName" Text="" />
             <Button x:Name="showItem" Text="Show item details" Clicked="OnShowItem" />
             <Button x:Name="showItemPrice" Text="Show item trading post price" Clicked="OnShowItemPrice" />
-            <Button x:Name="saveItemDB" Text="Save item name and id list" Clicked="OnSaveItemDB" />
             <StackLayout Orientation="Horizontal">
                 <StackLayout Spacing="0">
                     <Label x:Name="statusText" Text="" IsVisible="False"/>

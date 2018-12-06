@@ -13,7 +13,7 @@ namespace Gw2Sharp.Pages
  
     public partial class MainPage : ContentPage
     {
-        
+        public static InternetConnection Connection = new InternetConnection();
         public MainPage()
         {                   
             InitializeComponent();           

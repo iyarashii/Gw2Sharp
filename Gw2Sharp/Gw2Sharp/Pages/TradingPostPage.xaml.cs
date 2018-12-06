@@ -21,23 +21,15 @@ namespace Gw2Sharp.Pages
         public string ItemSellsPriceText { get; set; }
         public string ItemIconLink { get; set; }
         public string ItemID { get; set; }
+        //static InternetConnection Connection = new InternetConnection();
+
         public double SellsGoldTextFontSize { get { return enterItemNameText.FontSize; } }
-        public string ItemDBPath { get  { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.txt"); } }
+        static public string ItemDBPath { get  { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.txt"); } }
         public TradingPostPage ()
 		{
 			InitializeComponent ();
 		}
-        bool CheckForInternetConnection()
-        {
-            if (!InternetConnection.CheckForInternetConnection())
-            {
-                statusText.Text = "No internet connection!";
-                statusText.IsVisible = true;
-                BindingContext = this;
-                return false;
-            }
-            return true;
-        }
+
         bool CheckLocalItemDB()
         {
             string lineItemName = null;
@@ -61,6 +53,7 @@ namespace Gw2Sharp.Pages
         }
         async void OnShowItemPrice(object sender, EventArgs e)
         {
+            
             BindingContext = null;
             string apiResponse;
             itemPriceLayout.IsVisible = false;
@@ -69,7 +62,7 @@ namespace Gw2Sharp.Pages
             sellsSilverCoinImage.IsVisible = false;
             sellsGoldCoinImage.IsVisible = false;
 
-            if (!CheckForInternetConnection()) return;
+            if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
 
             if (!CheckLocalItemDB()) return;
 
@@ -146,48 +139,48 @@ namespace Gw2Sharp.Pages
             BindingContext = this;
             itemPriceLayout.IsVisible = true;
         }
-        async void OnSaveItemDB(object sender, EventArgs e)
-        {
-            if (!CheckForInternetConnection()) return;
+        //async void OnSaveItemDB(object sender, EventArgs e)
+        //{
+        //    if (!CheckForInternetConnection()) return;
 
-            string itemDatabase = null;
-            string apiResponse = null;    
-            int i = 0;
-            string apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
+        //    string itemDatabase = null;
+        //    string apiResponse = null;    
+        //    int i = 0;
+        //    string apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
 
-            for (i = 0; i <= 269; ++i)
-            {
-                apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
-                try
-                {
-                    apiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
-                }
-                catch (HttpRequestException)
-                {
-                    statusText.Text = "Http request error!";
-                    BindingContext = this;
-                    return;
-                }
-                catch (Exception)
-                {
-                    statusText.Text = "Unknown exception!";
-                    BindingContext = this;
-                    return;
-                }
-                saveItemDB.Text = "Getting api responses in progress... " + "(" + i + "/" + "269)";
-                BindingContext = this;
-                List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
-                for (int x = 0; x < itemNamesAndIds.Count; x++)
-                {
-                    itemDatabase += itemNamesAndIds[x].id;
-                    itemDatabase += " " + itemNamesAndIds[x].name + "\n";
-                }
-            }
+        //    for (i = 0; i <= 269; ++i)
+        //    {
+        //        apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
+        //        try
+        //        {
+        //            apiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
+        //        }
+        //        catch (HttpRequestException)
+        //        {
+        //            statusText.Text = "Http request error!";
+        //            BindingContext = this;
+        //            return;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            statusText.Text = "Unknown exception!";
+        //            BindingContext = this;
+        //            return;
+        //        }
+        //        saveItemDB.Text = "Getting api responses in progress... " + "(" + i + "/" + "269)";
+        //        BindingContext = this;
+        //        List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
+        //        for (int x = 0; x < itemNamesAndIds.Count; x++)
+        //        {
+        //            itemDatabase += itemNamesAndIds[x].id;
+        //            itemDatabase += " " + itemNamesAndIds[x].name + "\n";
+        //        }
+        //    }
           
-            File.WriteAllText(ItemDBPath, itemDatabase);
-            saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
-            BindingContext = this;
-        }
+        //    File.WriteAllText(ItemDBPath, itemDatabase);
+        //    saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
+        //    BindingContext = this;
+        //}
 
         async void OnShowItem(object sender, EventArgs e)
         {
@@ -196,26 +189,10 @@ namespace Gw2Sharp.Pages
             statusText.IsVisible = false;
             string apiResponse;
            
-            if(!CheckForInternetConnection()) return;
+            if(!MainPage.Connection.CheckForInternetConnection(statusText)) return;
 
             if(!CheckLocalItemDB()) return;
-            //foreach (string line in File.ReadLines(ItemDBPath))
-            //{
-            //    lineItemName = line.Substring(line.IndexOf(" "));
-            //    if ( (line.IndexOf(itemName.Text, StringComparison.InvariantCultureIgnoreCase) != -1 ) && ( lineItemName.Length - 1 == itemName.Text.Length )) 
-            //    {
-            //        itemID = line.Substring(0, line.IndexOf(" "));
-            //        break;
-            //    }
-            //}
-            //if (itemID == null)
-            //{
-            //    statusText.Text = "Item name not found in local item database!";
-            //    BindingContext = this;
-            //    statusText.IsVisible = true;
-            //    return;
-            //}
-
+            
             //string gw2spidyLink = "http://www.gw2spidy.com/search/" + itemName.Text;          
             //string startIndex = "data-id=\"";
             //itemID = itemID.Substring(itemID.IndexOf(startIndex) + startIndex.Length);
