@@ -42,8 +42,6 @@ namespace Gw2Sharp.Pages
 
             if (!MainPage.Connection.CheckForInternetConnection(gemToGoldExchangeStatusText))
             {
-                //GemToGoldExchangeStatusText = "No internet connection!";
-                //BindingContext = this;
                 return;
             }
 

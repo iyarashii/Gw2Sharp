@@ -21,7 +21,7 @@ namespace Gw2Sharp.Pages
         public string ItemSellsPriceText { get; set; }
         public string ItemIconLink { get; set; }
         public string ItemID { get; set; }
-        //static InternetConnection Connection = new InternetConnection();
+        
 
         public double SellsGoldTextFontSize { get { return enterItemNameText.FontSize; } }
         static public string ItemDBPath { get  { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.txt"); } }
@@ -139,48 +139,6 @@ namespace Gw2Sharp.Pages
             BindingContext = this;
             itemPriceLayout.IsVisible = true;
         }
-        //async void OnSaveItemDB(object sender, EventArgs e)
-        //{
-        //    if (!CheckForInternetConnection()) return;
-
-        //    string itemDatabase = null;
-        //    string apiResponse = null;    
-        //    int i = 0;
-        //    string apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
-
-        //    for (i = 0; i <= 269; ++i)
-        //    {
-        //        apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
-        //        try
-        //        {
-        //            apiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
-        //        }
-        //        catch (HttpRequestException)
-        //        {
-        //            statusText.Text = "Http request error!";
-        //            BindingContext = this;
-        //            return;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            statusText.Text = "Unknown exception!";
-        //            BindingContext = this;
-        //            return;
-        //        }
-        //        saveItemDB.Text = "Getting api responses in progress... " + "(" + i + "/" + "269)";
-        //        BindingContext = this;
-        //        List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
-        //        for (int x = 0; x < itemNamesAndIds.Count; x++)
-        //        {
-        //            itemDatabase += itemNamesAndIds[x].id;
-        //            itemDatabase += " " + itemNamesAndIds[x].name + "\n";
-        //        }
-        //    }
-          
-        //    File.WriteAllText(ItemDBPath, itemDatabase);
-        //    saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
-        //    BindingContext = this;
-        //}
 
         async void OnShowItem(object sender, EventArgs e)
         {

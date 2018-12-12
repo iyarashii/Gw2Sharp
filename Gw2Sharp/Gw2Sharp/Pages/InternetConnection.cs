@@ -42,13 +42,5 @@ namespace Gw2Sharp.Pages
             }
             return true;
         }
-        public void GrantAccess(string fullPath)
-        {
-            FileInfo dInfo = new FileInfo(fullPath);
-            FileSecurity dSecurity = dInfo.GetAccessControl();
-            //FileSystemAccessRule fsRule = new FileSystemAccessRule()
-            dSecurity.SetAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), FileSystemRights.Delete, AccessControlType.Allow));
-            dInfo.SetAccessControl(dSecurity);
-        }
     }
 }
