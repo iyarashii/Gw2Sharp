@@ -16,6 +16,7 @@
             <Entry x:Name="itemName" Text="" />
             <Button x:Name="showItem" Text="Show item details" Clicked="OnShowItem" />
             <Button x:Name="showItemPrice" Text="Show item trading post price" Clicked="OnShowItemPrice" />
+            <Button x:Name="copyChatLink" Text="Copy chat link of the item" Clicked="OnCopyChatLink" />
             <StackLayout Orientation="Horizontal">
                 <StackLayout Spacing="0">
                     <Label x:Name="statusText" Text="" IsVisible="False"/>

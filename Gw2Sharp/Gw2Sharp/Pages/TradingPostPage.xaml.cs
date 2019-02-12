@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Gw2Sharp.Schemas;
@@ -189,7 +189,7 @@ namespace Gw2Sharp.Pages
                 statusText.IsVisible = true;
                 return;
             }
-
+            responseTextLayout.IsVisible = true;
             switch (apiResponseItemType.type)
             {
                 case "Armor":
@@ -212,7 +212,7 @@ namespace Gw2Sharp.Pages
                     + "\nLevel: " + apiWeaponItemDetails.level + "\n"
                     + "Rarity: " + apiWeaponItemDetails.rarity + "\n"
                     + "Vendor value: " + apiWeaponItemDetails.vendor_value + "\n"
-                    + "Default skin: " + apiWeaponItemDetails.default_skin + "\n"
+                    + "Default skin: " + apiWeaponItemDetails.default_skin + "\n" + apiWeaponItemDetails.icon + " test\n"
                     + "Chat link: " + apiWeaponItemDetails.chat_link + "\n";
                     ItemIconLink = apiWeaponItemDetails.icon;
                     break;
@@ -328,6 +328,23 @@ namespace Gw2Sharp.Pages
                     return;
             }
             responseTextLayout.IsVisible = true;
+            BindingContext = this;
+        }
+        async void OnCopyChatLink(object sender, EventArgs e)
+        {
+            try
+            {
+                await Clipboard.SetTextAsync(ItemDetailsText.Substring(ItemDetailsText.IndexOf("["), (ItemDetailsText.IndexOf("]")) - ItemDetailsText.IndexOf(" [")));
+            }
+            catch
+            {
+                statusText.Text = "Chat link not available!";
+                statusText.IsVisible = true;
+                BindingContext = this;
+                return;
+            }
+            statusText.Text = "Copied!";
+            statusText.IsVisible = true;
             BindingContext = this;
         }
 
