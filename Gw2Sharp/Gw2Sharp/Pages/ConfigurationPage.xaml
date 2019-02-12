@@ -13,6 +13,7 @@
         <ScrollView>
             <StackLayout>
                 <Button x:Name="saveItemDB" Text="Save item name and id list" Clicked="OnSaveItemDB" />
+                <Button x:Name="stopButton" Text="Stop" IsEnabled="False" Clicked="OnStopButton"/>
                 <Button x:Name="deleteItemDB" Text="Delete local database" Clicked="OnDeleteItemDB" />
                 <Label x:Name="statusText" Text=""/>
             </StackLayout>

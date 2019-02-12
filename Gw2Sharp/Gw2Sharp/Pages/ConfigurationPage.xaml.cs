@@ -16,10 +16,24 @@ namespace Gw2Sharp.Pages
 	public partial class ConfigurationPage : ContentPage
 	{
         public int MaxApiPages { get; set; }
-		public ConfigurationPage()
+        public bool GettingApiResponses { get; set; } = false;
+
+
+        public ConfigurationPage()
 		{
 			InitializeComponent();
 		}
+
+        protected override bool OnBackButtonPressed()
+        {
+            if (GettingApiResponses)
+            {
+                statusText.Text = "Can't go back while getting data from api!";
+                return true;
+            }
+            return false;
+        }
+
         async void GetApiMaxPages()
         {
             string apiPagesLink = @"https://api.guildwars2.com/v2/items?page=-1&page_size=200";
@@ -55,14 +69,22 @@ namespace Gw2Sharp.Pages
         async void OnSaveItemDB(object sender, EventArgs e)
         {
             if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
+            GettingApiResponses = true;
+            stopButton.IsEnabled = true;
             GetApiMaxPages();
             string itemDatabase = null;
             string apiResponse = null;
             int i = 0;
             string apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
-            
+            saveItemDB.Text = "Getting api responses in progress... ";
             for (i = 0; i <= MaxApiPages; ++i)
             {
+                if (!GettingApiResponses)
+                {
+                    saveItemDB.Text = "Stopped at item page " + (i - 1) + "! Click again to redownload item info.";
+                    BindingContext = this;
+                    return;
+                }
                 apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
                 try
                 {
@@ -92,6 +114,7 @@ namespace Gw2Sharp.Pages
                 itemDatabase = null;
             }
             saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
+            GettingApiResponses = false;
             BindingContext = this;
         }
        void OnDeleteItemDB(object sender, EventArgs e)
@@ -110,6 +133,10 @@ namespace Gw2Sharp.Pages
             statusText.Text = "Database file successfully deleted!";
             BindingContext = this;
         }
-        
+      void OnStopButton(object sender, EventArgs e)
+        {
+            GettingApiResponses = false;
+            stopButton.IsEnabled = false;
+        }
     }
 }
