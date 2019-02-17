@@ -9,21 +9,26 @@ using Xamarin.Forms.Xaml;
 using Gw2Sharp.Schemas;
 using Newtonsoft.Json;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Gw2Sharp.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ConfigurationPage : ContentPage
 	{
+        // property used for storing number of item api pages
         public int MaxApiPages { get; set; }
+
+        // property used as a flag, that shows whether app is currently sending GET requests to the GW2 API
         public bool GettingApiResponses { get; set; } = false;
 
-
+        // page constructor
         public ConfigurationPage()
 		{
 			InitializeComponent();
 		}
 
+        // override that changes back button behavior depending on GettingApiResponses property value
         protected override bool OnBackButtonPressed()
         {
             if (GettingApiResponses)
@@ -34,11 +39,13 @@ namespace Gw2Sharp.Pages
             return false;
         }
 
+        // method that gets the current number of max api pages from api
         async void GetApiMaxPages()
         {
             string apiPagesLink = @"https://api.guildwars2.com/v2/items?page=-1&page_size=200";
             string contentString;
             HttpResponseMessage apiPagesResponse;
+
             try
             {
                 apiPagesResponse = await InternetConnection.client.GetAsync(apiPagesLink);
@@ -55,8 +62,9 @@ namespace Gw2Sharp.Pages
                 BindingContext = this;
                 return;
             }
+
             contentString = await apiPagesResponse.Content.ReadAsStringAsync();
-            contentString = contentString.Substring(contentString.IndexOf("-") + 2, contentString.IndexOf(".\"") - contentString.IndexOf("-") - 2);
+            contentString = Regex.Match(contentString, @"\d+(?=\.)").Value;
             if (!int.TryParse(contentString, out int maxApiPages))
             {
                 statusText.Text = "Error occured while parsing to int!";
@@ -66,6 +74,8 @@ namespace Gw2Sharp.Pages
             }
             MaxApiPages = maxApiPages;
         }
+
+        // event handler that saves item name & id values from api to a local file on saveItemDB button click
         async void OnSaveItemDB(object sender, EventArgs e)
         {
             if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
@@ -117,7 +127,9 @@ namespace Gw2Sharp.Pages
             GettingApiResponses = false;
             BindingContext = this;
         }
-       void OnDeleteItemDB(object sender, EventArgs e)
+
+        // event handler for deleteItemDB button that deletes local file that stores item name & id values from api
+        void OnDeleteItemDB(object sender, EventArgs e)
         {
             try
             {
@@ -133,7 +145,9 @@ namespace Gw2Sharp.Pages
             statusText.Text = "Database file successfully deleted!";
             BindingContext = this;
         }
-      void OnStopButton(object sender, EventArgs e)
+
+        // event handler for stop button; changes GettingApiResponses value to prevent sending GET requests to api
+        void OnStopButton(object sender, EventArgs e)
         {
             GettingApiResponses = false;
             stopButton.IsEnabled = false;

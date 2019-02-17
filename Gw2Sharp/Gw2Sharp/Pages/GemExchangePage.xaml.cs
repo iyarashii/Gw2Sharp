@@ -39,7 +39,7 @@ namespace Gw2Sharp.Pages
             InitializeComponent();
         }
 
-        // method that calculates and shows gold to gem exchange rate when pressing calculateGoldToGem button
+        // event handler that calculates and shows gold to gem exchange rate when calculateGoldToGem button is clicked
         async void OnCalculateGoldToGems(object sender, EventArgs e)
         {
             // reset binding context so that changes made to binding values can be seen after pressing button multiple times
