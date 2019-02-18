@@ -211,8 +211,8 @@ namespace Gw2Sharp.Pages
                     + "\nItem type: " + apiWeaponItemDetails.type
                     + "\nLevel: " + apiWeaponItemDetails.level + "\n"
                     + "Rarity: " + apiWeaponItemDetails.rarity + "\n"
-                    + "Vendor value: " + apiWeaponItemDetails.vendor_value + "\n"
-                    + "Default skin: " + apiWeaponItemDetails.default_skin + "\n" + apiWeaponItemDetails.icon + " test\n"
+                    //+ "Vendor value: " + apiWeaponItemDetails.vendor_value + "\n"
+                    + "Default skin: " + apiWeaponItemDetails.default_skin + "\n"/* + apiWeaponItemDetails.icon + " test\n"*/
                     + "Chat link: " + apiWeaponItemDetails.chat_link + "\n";
                     ItemIconLink = apiWeaponItemDetails.icon;
                     break;
@@ -330,6 +330,8 @@ namespace Gw2Sharp.Pages
             responseTextLayout.IsVisible = true;
             BindingContext = this;
         }
+
+        // TO DO: add android support to clipboard button
         async void OnCopyChatLink(object sender, EventArgs e)
         {
             try

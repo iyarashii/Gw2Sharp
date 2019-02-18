@@ -58,8 +58,8 @@ namespace Gw2Sharp.Pages
             double coins = CheckIfGoldAmountIsValid();
 
             // get api response and check if it was a success
-            bool apiResponseState = await GetApiResponse(coins);
-            if (apiResponseState == false) return;
+            bool apiResponseSuccess = await GetApiResponse(coins);
+            if (apiResponseSuccess == false) return;
 
             // show responseTextLayout to show images and values from api
             responseTextLayout.IsVisible = true;
