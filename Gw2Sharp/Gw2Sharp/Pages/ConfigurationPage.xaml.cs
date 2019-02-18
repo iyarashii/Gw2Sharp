@@ -78,24 +78,47 @@ namespace Gw2Sharp.Pages
         // event handler that saves item name & id values from api to a local file on saveItemDB button click
         async void OnSaveItemDB(object sender, EventArgs e)
         {
+            // check if internet connection is available
             if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
+            
+            // set a flag that tells GET request are being send
             GettingApiResponses = true;
+
+            // enable stop button
             stopButton.IsEnabled = true;
+
+            // get number of max api pages
             GetApiMaxPages();
-            string itemDatabase = null;
+
+            // get item names and ids; check if it was successful
+            bool getRequestApiResponseSuccess = await GetItemNamesAndIds();
+            if (!getRequestApiResponseSuccess) return;
+
+            // change button text
+            saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
+
+            // change flag to signal that GET requests are no longer being send
+            GettingApiResponses = false;
+
+            // set binding context to show changes in UI
+            BindingContext = this;
+        }
+
+        // method that asynchronously sends GET requests to the api to receive 200 JSONs per request
+        async Task<bool> GetItemNamesAndIds()
+        {
             string apiResponse = null;
-            int i = 0;
-            string apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
             saveItemDB.Text = "Getting api responses in progress... ";
-            for (i = 0; i <= MaxApiPages; ++i)
+
+            for (int i = 0; i <= MaxApiPages; ++i)
             {
                 if (!GettingApiResponses)
                 {
                     saveItemDB.Text = "Stopped at item page " + (i - 1) + "! Click again to redownload item info.";
                     BindingContext = this;
-                    return;
+                    return false;
                 }
-                apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
+                string apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
                 try
                 {
                     apiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
@@ -104,28 +127,33 @@ namespace Gw2Sharp.Pages
                 {
                     statusText.Text = "Http request error!";
                     BindingContext = this;
-                    return;
+                    return false;
                 }
                 catch (Exception)
                 {
                     statusText.Text = "Unknown exception!";
                     BindingContext = this;
-                    return;
+                    return false;
                 }
                 saveItemDB.Text = "Getting api responses in progress... " + "(" + i + "/" + MaxApiPages + ")";
                 BindingContext = this;
-                List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
-                for (int x = 0; x < itemNamesAndIds.Count; x++)
-                {
-                    itemDatabase += itemNamesAndIds[x].id;
-                    itemDatabase += " " + itemNamesAndIds[x].name + "\n";
-                }
-                File.AppendAllText(TradingPostPage.ItemDBPath, itemDatabase);
-                itemDatabase = null;
+                DeserializeAndAppendToFile(apiResponse);
             }
-            saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
-            GettingApiResponses = false;
-            BindingContext = this;
+            return true;
+        }
+
+        //  deserializes JSONs and appends ids and names from them to a text file
+        void DeserializeAndAppendToFile(string apiResponse)
+        {
+            string itemDatabase = null;
+            List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
+            for (int x = 0; x < itemNamesAndIds.Count; x++)
+            {
+                itemDatabase += itemNamesAndIds[x].id;
+                itemDatabase += " " + itemNamesAndIds[x].name + "\n";
+            }
+            File.AppendAllText(TradingPostPage.ItemDBPath, itemDatabase);
+            itemDatabase = null;
         }
 
         // event handler for deleteItemDB button that deletes local file that stores item name & id values from api
