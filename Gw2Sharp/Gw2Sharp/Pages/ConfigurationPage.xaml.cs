@@ -79,7 +79,7 @@ namespace Gw2Sharp.Pages
         async void OnSaveItemDB(object sender, EventArgs e)
         {
             // check if internet connection is available
-            if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
+            //if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
             
             // set a flag that tells GET request are being send
             GettingApiResponses = true;

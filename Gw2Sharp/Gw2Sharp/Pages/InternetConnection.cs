@@ -32,18 +32,18 @@ namespace Gw2Sharp.Pages
         /// <summary>
         /// Checks internet connection by using CheckWebResponse method and changes text of label given as parameter if no internet connection is available.
         /// </summary>
-        /// <param name="textLabel">textLabel which text will be changed when no internet connection is available.</param>
+        /// <param name="labelsTextProperty">Labels text property which will be changed when no internet connection is available.</param>
+        /// <param name="internetConnectionField">Field that stores information whether internet connection is working.</param>
         /// <returns></returns>
-        public bool CheckForInternetConnection(Label textLabel)
+        public string CheckForInternetConnection(string labelsTextProperty, ref bool internetConnectionField)
         {
             if (!CheckWebResponse())
             {
-                textLabel.Text = "No internet connection!";
-                textLabel.IsVisible = true;
-                textLabel.BindingContext = this;
-                return false;
+                internetConnectionField = false;
+                return "No internet connection!";
             }
-            return true;
+            internetConnectionField = true;
+            return labelsTextProperty;
         }
     }
 }

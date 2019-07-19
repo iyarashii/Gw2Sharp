@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Gw2Sharp.ViewModels"
              x:Class="Gw2Sharp.Pages.GemExchangePage"
              Title="Gem Exchange">
     <ContentPage.Padding>
@@ -9,52 +10,55 @@
             <On Platform="Android, UWP" Value="20" />
         </OnPlatform>
     </ContentPage.Padding>
+    <ContentPage.BindingContext>
+        <local:GemExchangeViewModel/>
+    </ContentPage.BindingContext>
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
                 <Label Text="Enter amount of gold you want to know the gem exchange ratio for:" />
-                <Entry x:Name="goldAmount" Text="" />
-                <Button x:Name="calculateGoldToGem" Text="Calculate gold to gem price" Clicked="OnCalculateGoldToGems" />
+                <Entry x:Name="goldAmount" Text="{Binding GoldAmount, Mode=TwoWay}" />
+                <Button x:Name="calculateGoldToGem" Text="Calculate gold to gem price" Command="{Binding CalculateGoldToGemsCommand}" />
                 <StackLayout Spacing="0">
-                    <Label x:Name="gemToGoldExchangeStatusText" Text="{Binding GemToGoldExchangeStatusText}" />
-                    <StackLayout x:Name="responseTextLayout" Spacing="0" IsVisible="False">
+                    <Label x:Name="gemToGoldExchangeStatusText" Text="{Binding GemToGoldExchangeStatusText}" IsVisible="{Binding IsGemToGoldExchangeStatusTextVisible}" />
+                    <StackLayout x:Name="responseTextLayout" Spacing="0" IsVisible="{Binding IsResponseLayoutVisible}">
                         <StackLayout Orientation="Horizontal">
                             <Label x:Name="goldText" Text="{Binding SendGoldText}" HorizontalOptions="Start" />
-                            <Image x:Name="goldImage" Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                            <Image x:Name="goldImage" Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="Start"></Image>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label x:Name="gemText" Text="{Binding ReceiveGemText}" HorizontalOptions="Start" />
-                            <Image x:Name="gemImage" Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                            <Image x:Name="gemImage" Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="StartAndExpand"></Image>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="{Binding GoldPerGemText}" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="Start"></Image>
                             <Label Text="per 1" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="StartAndExpand"></Image>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="For 400" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="Start"></Image>
                             <Label Text="{Binding PriceOf400Gems}" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="StartAndExpand"></Image>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="For 800" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="Start"></Image>
                             <Label Text="{Binding PriceOf800Gems}" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="StartAndExpand"></Image>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="For 1200" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="Start"></Image>
                             <Label Text="{Binding PriceOf1200Gems}" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="StartAndExpand"></Image>
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="For 2000" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="Start"></Image>
+                            <Image Source="https://render.guildwars2.com/file/220061640ECA41C0577758030357221B4ECCE62C/502065.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="Start"></Image>
                             <Label Text="{Binding PriceOf2000Gems}" HorizontalOptions="Start" />
-                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding TextHeight}" HorizontalOptions="StartAndExpand"></Image>
+                            <Image Source="https://render.guildwars2.com/file/98457F504BA2FAC8457F532C4B30EDC23929ACF9/619316.png" HeightRequest="{Binding Source={x:Reference gemToGoldExchangeStatusText}, Path=Height}" HorizontalOptions="StartAndExpand"></Image>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>

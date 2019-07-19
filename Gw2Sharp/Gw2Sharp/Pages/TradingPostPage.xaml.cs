@@ -62,7 +62,7 @@ namespace Gw2Sharp.Pages
             sellsSilverCoinImage.IsVisible = false;
             sellsGoldCoinImage.IsVisible = false;
 
-            if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
+            //if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
 
             if (!CheckLocalItemDB()) return;
 
@@ -147,7 +147,7 @@ namespace Gw2Sharp.Pages
             statusText.IsVisible = false;
             string apiResponse;
            
-            if(!MainPage.Connection.CheckForInternetConnection(statusText)) return;
+            //if(!MainPage.Connection.CheckForInternetConnection(statusText)) return;
 
             if(!CheckLocalItemDB()) return;
             
