@@ -9,7 +9,6 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Windows.Input;
 
 namespace Gw2Sharp.ViewModels
 {

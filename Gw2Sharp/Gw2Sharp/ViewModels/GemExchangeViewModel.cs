@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-//using Gw2Sharp.Views.Pages;
 using Gw2Sharp.Models.DTOs;
 using Gw2Sharp.Models;
 using System.Net.Http;

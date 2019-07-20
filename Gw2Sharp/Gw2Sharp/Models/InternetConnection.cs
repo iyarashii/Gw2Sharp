@@ -12,10 +12,6 @@ namespace Gw2Sharp.Models
         // initializing a readonly instance of HttpClient to give app access to http get requests
         public static readonly HttpClient client = new HttpClient();
 
-        // static instance of InternetConnection
-        //public static InternetConnection Connection = new InternetConnection();
-
-
         // method used for checking internet connection by trying to open readable stream from site
         public static bool CheckWebResponse()
         {
