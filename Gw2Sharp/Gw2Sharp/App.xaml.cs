@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Gw2Sharp.Pages;
+using Gw2Sharp.Views.Pages;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Gw2Sharp

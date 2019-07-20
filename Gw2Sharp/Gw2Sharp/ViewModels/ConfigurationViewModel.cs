@@ -1,46 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net.Http;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Gw2Sharp.Schemas;
+using Gw2Sharp.Models.DTOs;
+using Gw2Sharp.Models;
+using System.Net.Http;
 using Newtonsoft.Json;
-using System.IO;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Windows.Input;
 
-namespace Gw2Sharp.Pages
+namespace Gw2Sharp.ViewModels
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ConfigurationPage : ContentPage
-	{
+    public class ConfigurationViewModel : BaseViewModel
+    {
+        // field storing whether internet connection is working
+        bool internetConnection;
+
         // property used for storing number of item api pages
         public int MaxApiPages { get; set; }
 
         // property used as a flag, that shows whether app is currently sending GET requests to the GW2 API
-        public bool GettingApiResponses { get; set; } = false;
+        public bool GettingApiResponses { get; set; }
+        public string SaveItemDBButtonText { get; set; } = "Save item name and id list";
+        public string ConfigurationStatusText { get; set; }
 
-        // page constructor
-        public ConfigurationPage()
-		{
-			InitializeComponent();
-		}
+        public Command SaveItemDBCommand { get; set; }
+        public Command DeleteItemDBCommand { get; set; }
+        public Command StopButtonCommand { get; set; }
 
-        // override that changes back button behavior depending on GettingApiResponses property value
-        protected override bool OnBackButtonPressed()
+        public ConfigurationViewModel()
         {
-            if (GettingApiResponses)
+            GettingApiResponses = false;
+            // create command for asynchronous method
+            SaveItemDBCommand = new Command(async () => await ExecuteSaveItemDBCommand());
+            DeleteItemDBCommand = new Command( () =>  ExecuteDeleteItemDBCommand());
+            StopButtonCommand = new Command( () =>  ExecuteStopButtonCommand(), () => 
             {
-                statusText.Text = "Can't go back while getting data from api!";
-                return true;
-            }
-            return false;
+                if (!GettingApiResponses) return false;
+                else return true;
+            });
+            StopButtonCommand.ChangeCanExecute();
         }
 
         // method that gets the current number of max api pages from api
-        async void GetApiMaxPages()
+        async Task GetApiMaxPages()
         {
             string apiPagesLink = @"https://api.guildwars2.com/v2/items?page=-1&page_size=200";
             string contentString;
@@ -52,14 +57,12 @@ namespace Gw2Sharp.Pages
             }
             catch (HttpRequestException)
             {
-                statusText.Text = "Http request error!";
-                BindingContext = this;
+                ConfigurationStatusText = "Http request error!";
                 return;
             }
             catch (Exception)
             {
-                statusText.Text = "Unknown exception!";
-                BindingContext = this;
+                ConfigurationStatusText = "Unknown exception!";
                 return;
             }
 
@@ -67,76 +70,74 @@ namespace Gw2Sharp.Pages
             contentString = Regex.Match(contentString, @"\d+(?=\.)").Value;
             if (!int.TryParse(contentString, out int maxApiPages))
             {
-                statusText.Text = "Error occured while parsing to int!";
+                ConfigurationStatusText = "Error occured while parsing to int!";
                 //statusText.Text = contentString;
-                BindingContext = this;
                 return;
             }
             MaxApiPages = maxApiPages;
         }
 
         // event handler that saves item name & id values from api to a local file on saveItemDB button click
-        async void OnSaveItemDB(object sender, EventArgs e)
+        async Task ExecuteSaveItemDBCommand()
         {
-            // check if internet connection is available
-            //if (!MainPage.Connection.CheckForInternetConnection(statusText)) return;
-            
+            // check internet connection
+            ConfigurationStatusText = InternetConnection.CheckForInternetConnection(ConfigurationStatusText, ref internetConnection);
+            if (!internetConnection)
+            {
+                return;
+            }
+
             // set a flag that tells GET request are being send
             GettingApiResponses = true;
 
             // enable stop button
-            stopButton.IsEnabled = true;
+            StopButtonCommand.ChangeCanExecute();
+
+            //IsStopButtonEnabled = true;
 
             // get number of max api pages
-            GetApiMaxPages();
+            await GetApiMaxPages();
 
             // get item names and ids; check if it was successful
             bool getRequestApiResponseSuccess = await GetItemNamesAndIds();
             if (!getRequestApiResponseSuccess) return;
 
             // change button text
-            saveItemDB.Text = "Done! Click again to redownload and overwrite local database file";
+            SaveItemDBButtonText = "Done! Click again to redownload and overwrite local database file";
 
             // change flag to signal that GET requests are no longer being send
             GettingApiResponses = false;
-
-            // set binding context to show changes in UI
-            BindingContext = this;
         }
 
         // method that asynchronously sends GET requests to the api to receive 200 JSONs per request
         async Task<bool> GetItemNamesAndIds()
         {
             string apiResponse = null;
-            saveItemDB.Text = "Getting api responses in progress... ";
-
+            SaveItemDBButtonText = "Getting api responses in progress... ";
+            string apiItemLink;
             for (int i = 0; i <= MaxApiPages; ++i)
             {
                 if (!GettingApiResponses)
                 {
-                    saveItemDB.Text = "Stopped at item page " + (i - 1) + "! Click again to redownload item info.";
-                    BindingContext = this;
+                    SaveItemDBButtonText = "Stopped at item page " + (i - 1) + "! Click again to redownload item info.";
                     return false;
                 }
-                string apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
+                apiItemLink = "https://api.guildwars2.com/v2/items?page=" + i + "&page_size=200";
                 try
                 {
                     apiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
                 }
                 catch (HttpRequestException)
                 {
-                    statusText.Text = "Http request error!";
-                    BindingContext = this;
+                    ConfigurationStatusText = "Http request error!";
                     return false;
                 }
                 catch (Exception)
                 {
-                    statusText.Text = "Unknown exception!";
-                    BindingContext = this;
+                    ConfigurationStatusText = "Unknown exception!";
                     return false;
                 }
-                saveItemDB.Text = "Getting api responses in progress... " + "(" + i + "/" + MaxApiPages + ")";
-                BindingContext = this;
+                SaveItemDBButtonText = "Getting api responses in progress... " + "(" + i + "/" + MaxApiPages + ")";
                 DeserializeAndAppendToFile(apiResponse);
             }
             return true;
@@ -152,33 +153,31 @@ namespace Gw2Sharp.Pages
                 itemDatabase += itemNamesAndIds[x].id;
                 itemDatabase += " " + itemNamesAndIds[x].name + "\n";
             }
-            File.AppendAllText(TradingPostPage.ItemDBPath, itemDatabase);
+            File.AppendAllText(Constants.ItemDBPath, itemDatabase);
             itemDatabase = null;
         }
 
-        // event handler for deleteItemDB button that deletes local file that stores item name & id values from api
-        void OnDeleteItemDB(object sender, EventArgs e)
+        // method that deletes local file that stores item name & id values from api
+        void ExecuteDeleteItemDBCommand()
         {
             try
             {
-                File.SetAttributes(TradingPostPage.ItemDBPath, FileAttributes.Normal);
-                File.Delete(TradingPostPage.ItemDBPath);
+                File.SetAttributes(Constants.ItemDBPath, FileAttributes.Normal);
+                File.Delete(Constants.ItemDBPath);
             }
             catch (FileNotFoundException)
             {
-                statusText.Text = "Database not found!";
-                BindingContext = this;
+                ConfigurationStatusText = "Database not found!";
                 return;
             }
-            statusText.Text = "Database file successfully deleted!";
-            BindingContext = this;
+            ConfigurationStatusText = "Database file successfully deleted!";
         }
 
-        // event handler for stop button; changes GettingApiResponses value to prevent sending GET requests to api
-        void OnStopButton(object sender, EventArgs e)
+        // method that changes GettingApiResponses value to prevent sending GET requests to api
+        void ExecuteStopButtonCommand()
         {
-            GettingApiResponses = false;
-            stopButton.IsEnabled = false;
+           GettingApiResponses = false;
+           StopButtonCommand.ChangeCanExecute();
         }
     }
 }

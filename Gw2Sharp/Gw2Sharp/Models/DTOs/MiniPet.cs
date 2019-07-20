@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Schemas
+namespace Gw2Sharp.Models.DTOs
 {
-    class CraftingMaterial
+    class MiniPet
     {
+        public class Details
+        {
+            public int minipet_id { get; set; }
+            public string type { get; set; }
+            public string unlock_type { get; set; }
+        }
+
         public class RootObject
         {
             public string name { get; set; }
@@ -20,6 +27,7 @@ namespace Gw2Sharp.Schemas
             public int id { get; set; }
             public string chat_link { get; set; }
             public string icon { get; set; }
+            public Details details { get; set; }
         }
     }
 }

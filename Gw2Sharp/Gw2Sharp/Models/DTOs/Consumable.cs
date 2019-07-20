@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Schemas
+namespace Gw2Sharp.Models.DTOs
 {
-    class ContainerItemType
+    class Consumable
     {
         public class Details
         {
             public string type { get; set; }
+            public int duration_ms { get; set; }
+            public int apply_count { get; set; }
+            public string name { get; set; }
+            public string icon { get; set; }
+            public string description { get; set; }
         }
 
         public class RootObject
         {
             public string name { get; set; }
-            public string description { get; set; }
             public string type { get; set; }
             public int level { get; set; }
             public string rarity { get; set; }

@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Gw2Sharp.Schemas;
+using Gw2Sharp.Models.DTOs;
+using Gw2Sharp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.IO;
 
-namespace Gw2Sharp.Pages
+namespace Gw2Sharp.Views.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TradingPostPage : ContentPage

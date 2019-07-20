@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Schemas
+namespace Gw2Sharp.Models.DTOs
 {
-    class MiniPet
+    class ContainerItemType
     {
         public class Details
         {
-            public int minipet_id { get; set; }
             public string type { get; set; }
-            public string unlock_type { get; set; }
         }
 
         public class RootObject

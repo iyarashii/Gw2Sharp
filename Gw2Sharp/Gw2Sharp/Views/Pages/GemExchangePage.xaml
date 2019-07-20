@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Gw2Sharp.ViewModels"
-             x:Class="Gw2Sharp.Pages.GemExchangePage"
+             x:Class="Gw2Sharp.Views.Pages.GemExchangePage"
              Title="Gem Exchange">
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">

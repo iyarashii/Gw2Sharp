@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Schemas
+namespace Gw2Sharp.Models.DTOs
 {
     class ItemNamesAndIds
     {

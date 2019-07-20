@@ -2,15 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Schemas
+namespace Gw2Sharp.Models.DTOs
 {
-    class Gizmo
+    class CraftingMaterial
     {
-        public class Details
-        {
-            public string type { get; set; }
-        }
-
         public class RootObject
         {
             public string name { get; set; }
@@ -25,7 +20,6 @@ namespace Gw2Sharp.Schemas
             public int id { get; set; }
             public string chat_link { get; set; }
             public string icon { get; set; }
-            public Details details { get; set; }
         }
     }
 }

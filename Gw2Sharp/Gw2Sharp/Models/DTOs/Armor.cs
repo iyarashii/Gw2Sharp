@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Gw2Sharp.Schemas
+namespace Gw2Sharp.Models.DTOs
 {
-    class BackItem
+    class Armor
     {
         public class InfusionSlot
         {
@@ -25,9 +25,12 @@ namespace Gw2Sharp.Schemas
 
         public class Details
         {
+            public string type { get; set; }
+            public string weight_class { get; set; }
+            public int defense { get; set; }
             public List<InfusionSlot> infusion_slots { get; set; }
+            public InfixUpgrade infix_upgrade { get; set; }
             public string secondary_suffix_item_id { get; set; }
-            public List<int> stat_choices { get; set; }
         }
 
         public class RootObject

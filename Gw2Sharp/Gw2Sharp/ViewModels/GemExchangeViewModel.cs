@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Gw2Sharp.Pages;
-using Gw2Sharp.Schemas;
+//using Gw2Sharp.Views.Pages;
+using Gw2Sharp.Models.DTOs;
+using Gw2Sharp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -63,7 +64,7 @@ namespace Gw2Sharp.ViewModels
             GemToGoldExchangeStatusText = "Current gem to gold exchange:";
 
             // check internet connection
-            GemToGoldExchangeStatusText = MainPage.Connection.CheckForInternetConnection(GemToGoldExchangeStatusText, ref internetConnection);
+            GemToGoldExchangeStatusText = InternetConnection.CheckForInternetConnection(GemToGoldExchangeStatusText, ref internetConnection);
             if (!internetConnection)
             {
                 IsGemToGoldExchangeStatusTextVisible = true;
@@ -76,6 +77,7 @@ namespace Gw2Sharp.ViewModels
             // get api response and check if it was a success
             bool apiResponseSuccess = await GetApiResponse(coins);
 
+            // set status text visibilty to true to show possible errors
             // set status text visibilty to true to show possible errors
             IsGemToGoldExchangeStatusTextVisible = true;
 

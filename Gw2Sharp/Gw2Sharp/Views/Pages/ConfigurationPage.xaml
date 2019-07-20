@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Gw2Sharp.Pages.ConfigurationPage"
+             x:Class="Gw2Sharp.Views.Pages.ConfigurationPage"
              Title="Settings">
     <ContentPage.Padding>
             <OnPlatform x:TypeArguments="Thickness">
@@ -12,10 +12,10 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout>
-                <Button x:Name="saveItemDB" Text="Save item name and id list" Clicked="OnSaveItemDB" />
-                <Button x:Name="stopButton" Text="Stop" IsEnabled="False" Clicked="OnStopButton"/>
-                <Button x:Name="deleteItemDB" Text="Delete local database" Clicked="OnDeleteItemDB" />
-                <Label x:Name="statusText" Text=""/>
+                <Button x:Name="saveItemDB" Text="{Binding SaveItemDBButtonText}" Command="{Binding SaveItemDBCommand}" />
+                <Button x:Name="stopButton" Text="Stop" Command="{Binding StopButtonCommand}"/>
+                <Button x:Name="deleteItemDB" Text="Delete local database" Command="{Binding DeleteItemDBCommand}" />
+                <Label x:Name="statusText" Text="{Binding ConfigurationStatusText}"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

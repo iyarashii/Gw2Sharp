@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:Controls="clr-namespace:Gw2Sharp.Controls"
-             x:Class="Gw2Sharp.Pages.TradingPostPage"
+             x:Class="Gw2Sharp.Views.Pages.TradingPostPage"
              Title="Trading Post">
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">

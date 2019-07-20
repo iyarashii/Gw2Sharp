@@ -33,13 +33,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Pages\ConfigurationPage.xaml">
+    <EmbeddedResource Update="Views\Pages\ConfigurationPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\GemExchangePage.xaml">
+    <EmbeddedResource Update="Views\Pages\GemExchangePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Pages\TradingPostPage.xaml">
+    <EmbeddedResource Update="Views\Pages\TradingPostPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
