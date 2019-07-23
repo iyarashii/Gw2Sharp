@@ -15,9 +15,6 @@ namespace Gw2Sharp.ViewModels
 {
     public class TradingPostViewModel : BaseViewModel
     {
-        // field storing whether internet connection is working
-        bool internetConnection;
-
         // properties used for bindings
         public string ItemDetailsText { get; set; }
         public string ItemPriceText { get; set; }
@@ -94,9 +91,10 @@ namespace Gw2Sharp.ViewModels
             IsSellsSilverCoinImageVisible = false;
 
             // check internet connection
-            TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText, ref internetConnection);
-            if (!internetConnection)
+            TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText);
+            if (!InternetConnection.connection)
             {
+                IsTradingPostStatusTextVisible = true;
                 return;
             }
 
@@ -181,9 +179,10 @@ namespace Gw2Sharp.ViewModels
             string apiResponse;
 
             // check internet connection
-            TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText, ref internetConnection);
-            if (!internetConnection)
+            TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText);
+            if (!InternetConnection.connection)
             {
+                IsTradingPostStatusTextVisible = true;
                 return;
             }
 

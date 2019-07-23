@@ -7,10 +7,13 @@ using Xamarin.Forms;
 
 namespace Gw2Sharp.Models
 {
-    public class InternetConnection
+    public static class InternetConnection
     {
         // initializing a readonly instance of HttpClient to give app access to http get requests
         public static readonly HttpClient client = new HttpClient();
+
+        // field that stores the result of internet connection test
+        public static bool connection;
 
         // method used for checking internet connection by trying to open readable stream from site
         public static bool CheckWebResponse()
@@ -33,16 +36,15 @@ namespace Gw2Sharp.Models
         /// Checks internet connection by using CheckWebResponse method and changes text of label given as parameter if no internet connection is available.
         /// </summary>
         /// <param name="labelsTextProperty">Labels text property which will be changed when no internet connection is available.</param>
-        /// <param name="internetConnectionField">Field that stores information whether internet connection is working.</param>
         /// <returns></returns>
-        public static string CheckForInternetConnection(string labelsTextProperty, ref bool internetConnectionField)
+        public static string CheckForInternetConnection(string labelsTextProperty)
         {
             if (!CheckWebResponse())
             {
-                internetConnectionField = false;
+                connection = false;
                 return "No internet connection!";
             }
-            internetConnectionField = true;
+            connection = true;
             return labelsTextProperty;
         }
     }

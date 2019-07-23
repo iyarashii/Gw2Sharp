@@ -12,9 +12,6 @@ namespace Gw2Sharp.ViewModels
 {
     public class GemExchangeViewModel : BaseViewModel
     {
-        // field storing whether internet connection is working
-        bool internetConnection;
-
         // properties used for storing text values for different Labels
         public string GemToGoldExchangeStatusText { get; set; }
         public string SendGoldText { get; set; }
@@ -63,8 +60,8 @@ namespace Gw2Sharp.ViewModels
             GemToGoldExchangeStatusText = "Current gem to gold exchange:";
 
             // check internet connection
-            GemToGoldExchangeStatusText = InternetConnection.CheckForInternetConnection(GemToGoldExchangeStatusText, ref internetConnection);
-            if (!internetConnection)
+            GemToGoldExchangeStatusText = InternetConnection.CheckForInternetConnection(GemToGoldExchangeStatusText);
+            if (!InternetConnection.connection)
             {
                 IsGemToGoldExchangeStatusTextVisible = true;
                 return;

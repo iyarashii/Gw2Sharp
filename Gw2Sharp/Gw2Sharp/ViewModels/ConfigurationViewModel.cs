@@ -14,9 +14,6 @@ namespace Gw2Sharp.ViewModels
 {
     public class ConfigurationViewModel : BaseViewModel
     {
-        // field storing whether internet connection is working
-        bool internetConnection;
-
         // property used for storing number of item api pages
         public int MaxApiPages { get; set; }
 
@@ -80,8 +77,8 @@ namespace Gw2Sharp.ViewModels
         async Task ExecuteSaveItemDBCommand()
         {
             // check internet connection
-            ConfigurationStatusText = InternetConnection.CheckForInternetConnection(ConfigurationStatusText, ref internetConnection);
-            if (!internetConnection)
+            ConfigurationStatusText = InternetConnection.CheckForInternetConnection(ConfigurationStatusText);
+            if (!InternetConnection.connection)
             {
                 return;
             }
