@@ -9,6 +9,7 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Windows.Input;
 
 namespace Gw2Sharp.ViewModels
 {
@@ -22,9 +23,9 @@ namespace Gw2Sharp.ViewModels
         public string SaveItemDBButtonText { get; set; } = "Save item name and id list";
         public string ConfigurationStatusText { get; set; }
 
-        public Command SaveItemDBCommand { get; set; }
-        public Command DeleteItemDBCommand { get; set; }
-        public Command StopButtonCommand { get; set; }
+        public ICommand SaveItemDBCommand { get; set; }
+        public ICommand DeleteItemDBCommand { get; set; }
+        public ICommand StopButtonCommand { get; set; }
 
         public ConfigurationViewModel()
         {
@@ -34,10 +35,11 @@ namespace Gw2Sharp.ViewModels
             DeleteItemDBCommand = new Command( () =>  ExecuteDeleteItemDBCommand());
             StopButtonCommand = new Command( () =>  ExecuteStopButtonCommand(), () => 
             {
-                if (!GettingApiResponses) return false;
-                else return true;
+                //if (!GettingApiResponses) return false;
+                //else return true;
+                return GettingApiResponses;
             });
-            StopButtonCommand.ChangeCanExecute();
+            (StopButtonCommand as Command).ChangeCanExecute();
         }
 
         // method that gets the current number of max api pages from api
@@ -87,7 +89,7 @@ namespace Gw2Sharp.ViewModels
             GettingApiResponses = true;
 
             // enable stop button
-            StopButtonCommand.ChangeCanExecute();
+            (StopButtonCommand as Command).ChangeCanExecute();
 
             //IsStopButtonEnabled = true;
 
@@ -173,7 +175,7 @@ namespace Gw2Sharp.ViewModels
         void ExecuteStopButtonCommand()
         {
            GettingApiResponses = false;
-           StopButtonCommand.ChangeCanExecute();
+            (StopButtonCommand as Command).ChangeCanExecute();
         }
     }
 }
