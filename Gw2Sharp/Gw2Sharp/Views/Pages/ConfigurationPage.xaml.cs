@@ -2,15 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Gw2Sharp.Models.DTOs;
-using Gw2Sharp.Models;
-using Newtonsoft.Json;
-using System.IO;
-using System.Text.RegularExpressions;
 using Gw2Sharp.ViewModels;
 
 namespace Gw2Sharp.Views.Pages
