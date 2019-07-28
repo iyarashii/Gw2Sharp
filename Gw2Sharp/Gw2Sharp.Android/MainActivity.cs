@@ -20,10 +20,13 @@ namespace Gw2Sharp.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            // add actionbar to app window
             base.Window.RequestFeature(WindowFeatures.ActionBar);
-            // Name of the MainActivity theme you had there before.
-            // Or you can use global::Android.Resource.Style.ThemeHoloLight
+
+            // changing theme from splash screen to main
             base.SetTheme(Resource.Style.MainTheme);
+
+            // changing orientation to remove portrait mode lock
             RequestedOrientation = ScreenOrientation.Unspecified;
 
             base.OnCreate(savedInstanceState);
