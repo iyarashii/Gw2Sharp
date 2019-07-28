@@ -61,7 +61,7 @@ namespace Gw2Sharp.ViewModels
         // method used for checking whether typed in item name exists in local database
         bool CheckLocalItemDB()
         {
-            string lineItemName = null;
+            string lineItemName;
             foreach (string line in File.ReadLines(Constants.ItemDBPath))
             {
                 lineItemName = line.Substring(line.IndexOf(" "));
@@ -120,7 +120,7 @@ namespace Gw2Sharp.ViewModels
             }
 
             var apiItemPriceResponse = JsonConvert.DeserializeObject<ItemTpPrice.RootObject>(apiResponse);
-            string copperUnitPrice = null, silverUnitPrice = null, goldUnitPrice = null;
+            string copperUnitPrice, silverUnitPrice = null, goldUnitPrice = null;
             // BUYS
             if (apiItemPriceResponse.buys.unit_price.ToString().Length >= 2)
             {

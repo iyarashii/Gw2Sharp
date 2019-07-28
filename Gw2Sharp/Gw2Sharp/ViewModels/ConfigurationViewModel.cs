@@ -110,7 +110,7 @@ namespace Gw2Sharp.ViewModels
         // method that asynchronously sends GET requests to the api to receive 200 JSONs per request
         async Task<bool> GetItemNamesAndIds()
         {
-            string apiResponse = null;
+            string apiResponse;
             SaveItemDBButtonText = "Getting api responses in progress... ";
             string apiItemLink;
             for (int i = 0; i <= MaxApiPages; ++i)
@@ -152,7 +152,6 @@ namespace Gw2Sharp.ViewModels
                 itemDatabase += " " + itemNamesAndIds[x].name + "\n";
             }
             File.AppendAllText(Constants.ItemDBPath, itemDatabase);
-            itemDatabase = null;
         }
 
         // method that deletes local file that stores item name & id values from api
