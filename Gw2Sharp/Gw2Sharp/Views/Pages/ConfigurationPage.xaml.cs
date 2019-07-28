@@ -11,7 +11,7 @@ namespace Gw2Sharp.Views.Pages
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ConfigurationPage : ContentPage
 	{
-        ConfigurationViewModel ViewModel = new ConfigurationViewModel();
+        private readonly ConfigurationViewModel ViewModel = new ConfigurationViewModel();
 
         // page constructor
         public ConfigurationPage()
