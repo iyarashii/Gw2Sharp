@@ -259,3 +259,13 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-hdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-land-hdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-land-mdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-land-xhdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-land-xxhdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-land-xxxhdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-mdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-xhdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-xxhdpi
+/Gw2Sharp/Gw2Sharp.Android/Resources/drawable-xxxhdpi
