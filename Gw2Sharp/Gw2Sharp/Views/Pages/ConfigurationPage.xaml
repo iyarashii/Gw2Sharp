@@ -14,7 +14,7 @@
             <StackLayout>
                 <Button x:Name="saveItemDB" Text="{Binding SaveItemDBButtonText}" Command="{Binding SaveItemDBCommand}" />
                 <Button x:Name="stopButton" Text="Stop" Command="{Binding StopButtonCommand}"/>
-                <Button x:Name="deleteItemDB" Text="Delete local database" Command="{Binding DeleteItemDBCommand}" />
+                <Button x:Name="deleteItemDB" Text="Clear local database" Command="{Binding DeleteItemDBCommand}" />
                 <Label x:Name="statusText" Text="{Binding ConfigurationStatusText}"/>
             </StackLayout>
         </ScrollView>

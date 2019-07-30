@@ -2,12 +2,29 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Gw2Sharp.Views.Pages;
+using Gw2Sharp.Models;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Gw2Sharp
 {
     public partial class App : Application
-    {      
+    {
+        // local Database field
+        static Database database;
+
+        // Database property that creates a new Database instance as a singleton
+        public static Database Database
+        {
+            get
+            {
+                if(database == null)
+                {
+                    database = new Database(Constants.ItemDBPath);
+                }
+                return database;
+            }
+        }
+
         public App()
         {
             InitializeComponent();

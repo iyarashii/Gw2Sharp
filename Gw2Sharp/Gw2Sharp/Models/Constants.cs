@@ -7,6 +7,6 @@ namespace Gw2Sharp.Models
 {
     public class Constants
     {
-        static public string ItemDBPath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.txt"); } }
+        static public string ItemDBPath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.db3"); } }
     }
 }

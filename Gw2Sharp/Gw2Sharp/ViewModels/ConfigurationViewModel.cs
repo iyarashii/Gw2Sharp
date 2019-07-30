@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Gw2Sharp.Models.DTOs;
@@ -8,7 +7,6 @@ using Gw2Sharp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
-using System.IO;
 using System.Windows.Input;
 
 namespace Gw2Sharp.ViewModels
@@ -20,7 +18,7 @@ namespace Gw2Sharp.ViewModels
 
         // property used as a flag, that shows whether app is currently sending GET requests to the GW2 API
         public bool GettingApiResponses { get; set; }
-        public string SaveItemDBButtonText { get; set; } = "Save item name and id list";
+        public string SaveItemDBButtonText { get; set; } = "Update local item name & id database";
         public string ConfigurationStatusText { get; set; }
 
         public ICommand SaveItemDBCommand { get; set; }
@@ -30,15 +28,21 @@ namespace Gw2Sharp.ViewModels
         public ConfigurationViewModel()
         {
             GettingApiResponses = false;
+
             // create command for asynchronous method
-            SaveItemDBCommand = new Command(async () => await ExecuteSaveItemDBCommand());
-            DeleteItemDBCommand = new Command( () =>  ExecuteDeleteItemDBCommand());
-            StopButtonCommand = new Command( () =>  ExecuteStopButtonCommand(), () => 
+            SaveItemDBCommand = new Command(async () => await ExecuteSaveItemDBCommand(), () =>
             {
-                //if (!GettingApiResponses) return false;
-                //else return true;
+                return !GettingApiResponses;
+            }
+            );
+
+            DeleteItemDBCommand = new Command( () =>  ExecuteDeleteItemDBCommand());
+
+            StopButtonCommand = new Command(() => ExecuteStopButtonCommand(), () => 
+            {
                 return GettingApiResponses;
             });
+
             (StopButtonCommand as Command).ChangeCanExecute();
         }
 
@@ -87,11 +91,10 @@ namespace Gw2Sharp.ViewModels
 
             // set a flag that tells GET request are being send
             GettingApiResponses = true;
+            (SaveItemDBCommand as Command).ChangeCanExecute();
 
             // enable stop button
             (StopButtonCommand as Command).ChangeCanExecute();
-
-            //IsStopButtonEnabled = true;
 
             // get number of max api pages
             await GetApiMaxPages();
@@ -101,10 +104,12 @@ namespace Gw2Sharp.ViewModels
             if (!getRequestApiResponseSuccess) return;
 
             // change button text
-            SaveItemDBButtonText = "Done! Click again to redownload and overwrite local database file";
+            SaveItemDBButtonText = "Done! Click again to redownload";
 
             // change flag to signal that GET requests are no longer being send
             GettingApiResponses = false;
+            (SaveItemDBCommand as Command).ChangeCanExecute();
+            (StopButtonCommand as Command).ChangeCanExecute();
         }
 
         // method that asynchronously sends GET requests to the api to receive 200 JSONs per request
@@ -136,44 +141,37 @@ namespace Gw2Sharp.ViewModels
                     return false;
                 }
                 SaveItemDBButtonText = "Getting api responses in progress... " + "(" + i + "/" + MaxApiPages + ")";
-                DeserializeAndAppendToFile(apiResponse);
+                await DeserializeAndAppendToFile(apiResponse);
             }
             return true;
         }
 
         //  deserializes JSONs and appends ids and names from them to a text file
-        void DeserializeAndAppendToFile(string apiResponse)
+        async Task DeserializeAndAppendToFile(string apiResponse)
         {
-            string itemDatabase = null;
             List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
-            for (int x = 0; x < itemNamesAndIds.Count; x++)
-            {
-                itemDatabase += itemNamesAndIds[x].id;
-                itemDatabase += " " + itemNamesAndIds[x].name + "\n";
-            }
-            File.AppendAllText(Constants.ItemDBPath, itemDatabase);
+            await App.Database.SaveItemsAndIdsAsync(itemNamesAndIds);
         }
 
         // method that deletes local file that stores item name & id values from api
+        //async Task ExecuteDeleteItemDBCommand()
         void ExecuteDeleteItemDBCommand()
         {
-            try
-            {
-                File.SetAttributes(Constants.ItemDBPath, FileAttributes.Normal);
-                File.Delete(Constants.ItemDBPath);
-            }
-            catch (FileNotFoundException)
-            {
-                ConfigurationStatusText = "Database not found!";
-                return;
-            }
-            ConfigurationStatusText = "Database file successfully deleted!";
+            //await App.Database.ClearAsync();
+            App.Database.ClearItemNamesAndIdsTable();
+            ConfigurationStatusText = "Database cleared!";
         }
 
         // method that changes GettingApiResponses value to prevent sending GET requests to api
         void ExecuteStopButtonCommand()
         {
-           GettingApiResponses = false;
+            //List<ItemNamesAndIds> test = await App.Database.GetPeopleAsync();
+            //for (int x = 0; x < test.Count; x++)
+            //{
+            //    ConfigurationStatusText += test[x].id;
+            //    ConfigurationStatusText += " " + test[x].name + "\n";
+            //}
+            GettingApiResponses = false;
             (StopButtonCommand as Command).ChangeCanExecute();
         }
     }

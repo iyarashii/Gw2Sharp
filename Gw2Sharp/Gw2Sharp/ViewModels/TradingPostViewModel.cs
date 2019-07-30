@@ -59,24 +59,19 @@ namespace Gw2Sharp.ViewModels
         }
 
         // method used for checking whether typed in item name exists in local database
-        bool CheckLocalItemDB()
+        async Task<bool> CheckLocalItemDB()
         {
-            string lineItemName;
-            foreach (string line in File.ReadLines(Constants.ItemDBPath))
-            {
-                lineItemName = line.Substring(line.IndexOf(" "));
-                if ((line.IndexOf(ItemNameEntryText, StringComparison.InvariantCultureIgnoreCase) != -1) && (lineItemName.Length - 1 == ItemNameEntryText.Length) && ItemNameEntryText != "")
-                {
-                    ItemID = line.Substring(0, line.IndexOf(" "));
-                    break;
-                }
-            }
-            if (ItemID == null)
+            //List<ItemNamesAndIds> returnedItem = await App.Database.GetItemAsync(ItemNameEntryText);
+            ItemNamesAndIds returnedItem = await App.Database.GetItemAsync(ItemNameEntryText);
+            //if (returnedItem.Count == 0)
+            if (returnedItem == null)
             {
                 TradingPostStatusText = "Item name not found in local item database!";
                 IsTradingPostStatusTextVisible = true;
                 return false;
             }
+            //ItemID = returnedItem[0].id.ToString();
+            ItemID = returnedItem.id.ToString();
             return true;
         }
 
@@ -98,7 +93,7 @@ namespace Gw2Sharp.ViewModels
                 return;
             }
 
-            if (!CheckLocalItemDB()) return;
+            if (! await CheckLocalItemDB()) return;
 
             string apiItemLink = "https://api.guildwars2.com/v2/commerce/prices/" + ItemID;
 
@@ -186,7 +181,7 @@ namespace Gw2Sharp.ViewModels
                 return;
             }
 
-            if (!CheckLocalItemDB()) return;
+            if (!await CheckLocalItemDB()) return;
 
             //string gw2spidyLink = "http://www.gw2spidy.com/search/" + itemName.Text;          
             //string startIndex = "data-id=\"";
@@ -367,7 +362,7 @@ namespace Gw2Sharp.ViewModels
             IsResponseTextLayoutVisible = true;
         }
 
-        // TO DO: add android support to clipboard button
+        // method used for copying item chatlink to clipboard via button press
         async Task ExecuteCopyChatLinkCommand()
         {
             try
