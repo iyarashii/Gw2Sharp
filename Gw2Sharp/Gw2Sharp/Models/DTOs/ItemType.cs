@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Gw2Sharp.Models.DTOs
+﻿namespace Gw2Sharp.Models.DTOs
 {
     class ItemType
     {

@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Gw2Sharp.Models
 {
+    // utility class with constants
     public class Constants
     {
-        static public string ItemDBPath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.db3"); } }
+        // property that stores path to the local item names and ids database
+        public static string ItemDBPath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "itemDB.db3"); } }
     }
 }
