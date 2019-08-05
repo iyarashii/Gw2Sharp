@@ -20,14 +20,19 @@ namespace Gw2Sharp.Models
         // returns the item with the same name as the name passed as a parameter
         public Task<ItemNamesAndIds> GetItemAsync(string typedItemName)
         {
-            //return _database.QueryAsync<ItemNamesAndIds>("SELECT * FROM ItemNamesAndIds WHERE name = ? COLLATE NOCASE", typedItemName);
+            //return _database.QueryAsync<ItemNamesAndIds>("SELECT * FROM ItemNamesAndIds WHERE name = ? COLLATE NOCASE", typedItemName); // used for debugging
             return _database.Table<ItemNamesAndIds>().Where(i => i.name == typedItemName).FirstOrDefaultAsync();
         }
 
-        // inserts specified List<ItemNamesAndIds object into the database
-        public Task<int> SaveItemsAndIdsAsync(List<ItemNamesAndIds> itemsAndIdsList)
+        // inserts specified items into the database
+        public async Task SaveItemsAndIdsAsync(List<ItemNamesAndIds> itemsAndIdsList)
         {
-            return _database.InsertAllAsync(itemsAndIdsList);
+            //return _database.InsertAllAsync(itemsAndIdsList); // previous version - used for debugging
+            foreach(ItemNamesAndIds item in itemsAndIdsList)
+            {
+                await _database.InsertOrReplaceAsync(item);
+            }
+            return;
         }
 
         // drops and recreates table that stores ItemNamesAndIds objects
