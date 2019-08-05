@@ -16,6 +16,7 @@ using Xamarin.Forms.Platform.Android;
 
 namespace Gw2Sharp.Droid.Controls
 {
+    // custom renderer class that replaces SelectableLabel renderer on Android platform
     public class SelectableLabelRenderer : EditorRenderer
     {
         public SelectableLabelRenderer(Context context) : base(context)
@@ -34,6 +35,7 @@ namespace Gw2Sharp.Droid.Controls
             Control.ShowSoftInputOnFocus = false;
             Control.SetTextIsSelectable(true);
             Control.CustomSelectionActionModeCallback = new CustomSelectionActionModeCallback();
+            // TO DO: do something to prevent pasting text into the label
             //Control.CustomInsertionActionModeCallback = new CustomInsertionActionModeCallback();
         }
         protected override FormsEditText CreateNativeControl() => new CustomEditText(Context);

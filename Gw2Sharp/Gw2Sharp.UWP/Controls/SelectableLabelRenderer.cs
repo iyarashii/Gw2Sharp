@@ -10,7 +10,7 @@ using Xamarin.Forms.Platform.UWP;
 
 namespace Gw2Sharp.UWP.Controls
 {
-    
+    // custom renderer class that replaces SelectableLabel renderer on UWP platform
     public class SelectableLabelRenderer : EditorRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Editor> e)
