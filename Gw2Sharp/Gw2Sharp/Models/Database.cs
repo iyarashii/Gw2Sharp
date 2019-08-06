@@ -32,7 +32,6 @@ namespace Gw2Sharp.Models
             {
                 await _database.InsertOrReplaceAsync(item);
             }
-            return;
         }
 
         // drops and recreates table that stores ItemNamesAndIds objects

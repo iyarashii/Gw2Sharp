@@ -84,7 +84,6 @@ namespace Gw2Sharp.ViewModels
 
             // assign received values from API to the correct properties 
             SetValuesFromApiData(coins);
-            return;
         }
 
         // assigns values from API to labels text properties
