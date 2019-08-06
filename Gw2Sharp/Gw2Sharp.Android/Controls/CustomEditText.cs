@@ -25,8 +25,6 @@ namespace Gw2Sharp.Droid.Controls
         protected override void OnAttachedToWindow()
         {
             base.OnAttachedToWindow();
-            //Enabled = false;
-            //Enabled = true;
         }
         
     }
