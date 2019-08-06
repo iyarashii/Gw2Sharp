@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using Xamarin.Forms;
 
 namespace Gw2Sharp.Views.Pages
 {
- 
+
     public partial class MainPage : ContentPage
     {
         public MainPage()
