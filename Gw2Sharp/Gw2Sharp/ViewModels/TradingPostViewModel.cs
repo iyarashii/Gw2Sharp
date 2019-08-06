@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Gw2Sharp.Models.DTOs;
 using Gw2Sharp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
-using System.IO;
 using Xamarin.Essentials;
 
 namespace Gw2Sharp.ViewModels
@@ -16,6 +12,7 @@ namespace Gw2Sharp.ViewModels
     public class TradingPostViewModel : BaseViewModel
     {
         // properties used for bindings
+        #region BindingProperties
         public string ItemDetailsText { get; set; }
         public string ItemPriceText { get; set; }
         public string ItemSellsPriceText { get; set; }
@@ -36,11 +33,18 @@ namespace Gw2Sharp.ViewModels
         public bool IsBuysSilverCoinImageVisible { get; set; }
         public bool IsSellsGoldCoinImageVisible { get; set; }
         public bool IsSellsSilverCoinImageVisible { get; set; }
+        #endregion
 
-
+        // command properties
         public Command ShowItemPriceCommand { get; set; }
         public Command ShowItemCommand { get; set; }
         public Command CopyChatLinkCommand { get; set; }
+
+        // stores api response value
+        public string ApiResponse { get; set; }
+
+        // stores item type from api response
+        ItemType ApiResponseItemType { get; set; }
 
         // constructor
         public TradingPostViewModel()
@@ -58,32 +62,28 @@ namespace Gw2Sharp.ViewModels
             CopyChatLinkCommand = new Command(async () => await ExecuteCopyChatLinkCommand());
         }
 
-        // method used for checking whether typed in item name exists in local database
+        // checks whether typed in item name exists in the local database
         async Task<bool> CheckLocalItemDB()
         {
-            //List<ItemNamesAndIds> returnedItem = await App.Database.GetItemAsync(ItemNameEntryText);
             ItemNamesAndIds returnedItem = await App.Database.GetItemAsync(ItemNameEntryText);
-            //if (returnedItem.Count == 0)
+
             if (returnedItem == null)
             {
                 TradingPostStatusText = "Item name not found in local item database!";
                 IsTradingPostStatusTextVisible = true;
                 return false;
             }
-            //ItemID = returnedItem[0].id.ToString();
+
             ItemID = returnedItem.id.ToString();
             return true;
         }
 
-        // method used to display typed in item price and quantity
+        // displays price and quantity of typed in item
         async Task ExecuteShowItemPriceCommand()
         {
             string apiResponse;
-            IsItemPriceLayoutVisible = false;
-            IsBuysGoldCoinImageVisible = false;
-            IsBuysSilverCoinImageVisible = false;
-            IsSellsGoldCoinImageVisible = false;
-            IsSellsSilverCoinImageVisible = false;
+
+            HideCoinImages();
 
             // check internet connection
             TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText);
@@ -115,63 +115,90 @@ namespace Gw2Sharp.ViewModels
             }
 
             var apiItemPriceResponse = JsonConvert.DeserializeObject<ItemTpPrice.RootObject>(apiResponse);
-            string copperUnitPrice, silverUnitPrice = null, goldUnitPrice = null;
-            // BUYS
-            if (apiItemPriceResponse.buys.unit_price.ToString().Length >= 2)
-            {
-                copperUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(apiItemPriceResponse.buys.unit_price.ToString().Length - 2);
-                if (apiItemPriceResponse.buys.unit_price.ToString().Length >= 3)
-                {
-                    if (apiItemPriceResponse.buys.unit_price.ToString().Length == 3)
-                        silverUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(apiItemPriceResponse.buys.unit_price.ToString().Length - 3, 1);
-                    else silverUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(apiItemPriceResponse.buys.unit_price.ToString().Length - 4, 2);
-                    IsBuysSilverCoinImageVisible = true;
-                    if (apiItemPriceResponse.buys.unit_price.ToString().Length > 4)
-                    {
-                        goldUnitPrice = apiItemPriceResponse.buys.unit_price.ToString().Substring(0, apiItemPriceResponse.buys.unit_price.ToString().Length - 4);
-                        IsBuysGoldCoinImageVisible = true;
-                    }
-                }
-            }
-            else copperUnitPrice = apiItemPriceResponse.buys.unit_price.ToString();
 
-            BuysGoldText = goldUnitPrice;
-            BuysSilverText = silverUnitPrice;
-            BuysCopperText = copperUnitPrice;
+            // display item BUYS listings price 
+            DisplayItemPrice(apiItemPriceResponse.buys.unit_price.ToString(), true);
 
-            // SELLS
-            if (apiItemPriceResponse.sells.unit_price.ToString().Length >= 2)
-            {
-                copperUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(apiItemPriceResponse.sells.unit_price.ToString().Length - 2);
-                if (apiItemPriceResponse.sells.unit_price.ToString().Length >= 3)
-                {
-                    if (apiItemPriceResponse.sells.unit_price.ToString().Length == 3)
-                        silverUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(apiItemPriceResponse.sells.unit_price.ToString().Length - 3, 1);
-                    else silverUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(apiItemPriceResponse.sells.unit_price.ToString().Length - 4, 2);
-                    IsSellsSilverCoinImageVisible = true;
-                    if (apiItemPriceResponse.sells.unit_price.ToString().Length > 4)
-                    {
-                        goldUnitPrice = apiItemPriceResponse.sells.unit_price.ToString().Substring(0, apiItemPriceResponse.sells.unit_price.ToString().Length - 4);
-                        IsSellsGoldCoinImageVisible = true;
-                    }
-                }
-            }
-            else copperUnitPrice = apiItemPriceResponse.sells.unit_price.ToString();
+            // display item SELLS listings price
+            DisplayItemPrice(apiItemPriceResponse.sells.unit_price.ToString(), false);
 
             ItemPriceText = "Buy orders:\n" + "Quantity: " + apiItemPriceResponse.buys.quantity;
             ItemSellsPriceText = "Sell orders:\n" + "Quantity: " + apiItemPriceResponse.sells.quantity;
-            SellsGoldText = goldUnitPrice;
-            SellsSilverText = silverUnitPrice;
-            SellsCopperText = copperUnitPrice;
 
             IsItemPriceLayoutVisible = true;
         }
 
+        // displays item price broken down into gold, silver and copper coins
+        void DisplayItemPrice(string itemUnitPrice, bool buys)
+        {
+            string copperUnitPrice, silverUnitPrice = null, goldUnitPrice = null;
+
+            if (itemUnitPrice.Length >= 2)
+            {
+                copperUnitPrice = itemUnitPrice.Substring(itemUnitPrice.Length - 2);
+
+                if (itemUnitPrice.Length >= 3)
+                {
+                    if (itemUnitPrice.Length == 3)
+                        silverUnitPrice = itemUnitPrice.Substring(itemUnitPrice.Length - 3, 1);
+                    else silverUnitPrice = itemUnitPrice.Substring(itemUnitPrice.Length - 4, 2);
+
+                    if (buys)
+                    {
+                        IsBuysSilverCoinImageVisible = true;
+                    }
+                    else
+                    {
+                        IsSellsSilverCoinImageVisible = true;
+                    }
+
+                    if (itemUnitPrice.Length > 4)
+                    {
+                        goldUnitPrice = itemUnitPrice.Substring(0, itemUnitPrice.Length - 4);
+
+                        if (buys)
+                        {
+                            IsBuysGoldCoinImageVisible = true;
+                        }
+                        else
+                        {
+                            IsSellsGoldCoinImageVisible = true;
+                        }
+                    }
+                }
+            }
+            else copperUnitPrice = itemUnitPrice;
+
+            if (buys)
+            {
+                BuysGoldText = goldUnitPrice;
+                BuysSilverText = silverUnitPrice;
+                BuysCopperText = copperUnitPrice;
+            }
+            else
+            {
+                SellsGoldText = goldUnitPrice;
+                SellsSilverText = silverUnitPrice;
+                SellsCopperText = copperUnitPrice;
+            }
+        }
+
+        // hides coin images
+        void HideCoinImages()
+        {
+            IsItemPriceLayoutVisible = false;
+            IsBuysGoldCoinImageVisible = false;
+            IsBuysSilverCoinImageVisible = false;
+            IsSellsGoldCoinImageVisible = false;
+            IsSellsSilverCoinImageVisible = false;
+        }
+
+        // displays item details
         async Task ExecuteShowItemCommand()
         {
             IsResponseTextLayoutVisible = false;
             IsTradingPostStatusTextVisible = false;
-            string apiResponse;
+            ItemIconLink = null;
 
             // check internet connection
             TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText);
@@ -183,49 +210,16 @@ namespace Gw2Sharp.ViewModels
 
             if (!await CheckLocalItemDB()) return;
 
-            //string gw2spidyLink = "http://www.gw2spidy.com/search/" + itemName.Text;          
-            //string startIndex = "data-id=\"";
-            //itemID = itemID.Substring(itemID.IndexOf(startIndex) + startIndex.Length);
-            //itemID = itemID.Substring(0, itemID.IndexOf("\""));
-
             string apiItemLink = "https://api.guildwars2.com/v2/items/" + ItemID;
 
-            try
-            {
-                apiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
-            }
-            catch (HttpRequestException)
-            {
-                TradingPostStatusText = "No such id";
-                IsTradingPostStatusTextVisible = true;
-                return;
-            }
-            catch (Exception)
-            {
-                TradingPostStatusText = "Unknown exception!";
-                IsTradingPostStatusTextVisible = true;
-                return;
-            }
+            if (!await GetApiItemDetailsResponse(apiItemLink)) return;
 
-            ItemType apiResponseItemType;
+            if (!GetItemType()) return;
 
-            try
-            {
-                apiResponseItemType = JsonConvert.DeserializeObject<ItemType>(apiResponse);
-            }
-            catch (JsonSerializationException)
-            {
-                TradingPostStatusText = "JsonSerialization exception!";
-                IsTradingPostStatusTextVisible = true;
-                return;
-            }
-
-            IsResponseTextLayoutVisible = true;
-
-            switch (apiResponseItemType.type)
+            switch (ApiResponseItemType.type)
             {
                 case "Armor":
-                    var apiArmorItemDetails = JsonConvert.DeserializeObject<Armor.RootObject>(apiResponse);
+                    var apiArmorItemDetails = JsonConvert.DeserializeObject<Armor.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiArmorItemDetails.name;
                     ItemDetailsText += "\nDescription: " + apiArmorItemDetails.description
                      + "\nItem type: " + apiArmorItemDetails.type
@@ -237,19 +231,19 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiArmorItemDetails.icon;
                     break;
                 case "Weapon":
-                    var apiWeaponItemDetails = JsonConvert.DeserializeObject<Weapon.RootObject>(apiResponse);
+                    var apiWeaponItemDetails = JsonConvert.DeserializeObject<Weapon.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiWeaponItemDetails.name;
                     ItemDetailsText += "\nDescription: " + apiWeaponItemDetails.description
                     + "\nItem type: " + apiWeaponItemDetails.type
                     + "\nLevel: " + apiWeaponItemDetails.level + "\n"
                     + "Rarity: " + apiWeaponItemDetails.rarity + "\n"
                     //+ "Vendor value: " + apiWeaponItemDetails.vendor_value + "\n"
-                    + "Default skin: " + apiWeaponItemDetails.default_skin + "\n"/* + apiWeaponItemDetails.icon + " test\n"*/
+                    + "Default skin: " + apiWeaponItemDetails.default_skin + "\n"
                     + "Chat link: " + apiWeaponItemDetails.chat_link + "\n";
                     ItemIconLink = apiWeaponItemDetails.icon;
                     break;
                 case "Back":
-                    var apiBackItemDetails = JsonConvert.DeserializeObject<BackItem.RootObject>(apiResponse);
+                    var apiBackItemDetails = JsonConvert.DeserializeObject<BackItem.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiBackItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiBackItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiBackItemDetails.type + "\n";
@@ -258,7 +252,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiBackItemDetails.icon;
                     break;
                 case "Bag":
-                    var apiBagItemDetails = JsonConvert.DeserializeObject<Bag.RootObject>(apiResponse);
+                    var apiBagItemDetails = JsonConvert.DeserializeObject<Bag.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiBagItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiBagItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiBagItemDetails.type + "\n";
@@ -267,7 +261,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiBagItemDetails.icon;
                     break;
                 case "Consumable":
-                    var apiConsumableItemDetails = JsonConvert.DeserializeObject<Consumable.RootObject>(apiResponse);
+                    var apiConsumableItemDetails = JsonConvert.DeserializeObject<Consumable.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiConsumableItemDetails.name + "\n";
                     ItemDetailsText += "Item type: " + apiConsumableItemDetails.type + "\n";
                     ItemDetailsText += "Rarity: " + apiConsumableItemDetails.rarity + "\n";
@@ -275,7 +269,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiConsumableItemDetails.icon;
                     break;
                 case "Container":
-                    var apiContainerItemTypeDetails = JsonConvert.DeserializeObject<ContainerItemType.RootObject>(apiResponse);
+                    var apiContainerItemTypeDetails = JsonConvert.DeserializeObject<ContainerItemType.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiContainerItemTypeDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiContainerItemTypeDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiContainerItemTypeDetails.type + "\n";
@@ -284,7 +278,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiContainerItemTypeDetails.icon;
                     break;
                 case "CraftingMaterial":
-                    var apiCraftingMaterialItemDetails = JsonConvert.DeserializeObject<CraftingMaterial.RootObject>(apiResponse);
+                    var apiCraftingMaterialItemDetails = JsonConvert.DeserializeObject<CraftingMaterial.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiCraftingMaterialItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiCraftingMaterialItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiCraftingMaterialItemDetails.type + "\n";
@@ -293,7 +287,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiCraftingMaterialItemDetails.icon;
                     break;
                 case "Gathering":
-                    var apiGatheringItemDetails = JsonConvert.DeserializeObject<Gathering.RootObject>(apiResponse);
+                    var apiGatheringItemDetails = JsonConvert.DeserializeObject<Gathering.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiGatheringItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiGatheringItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiGatheringItemDetails.type + "\n";
@@ -302,7 +296,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiGatheringItemDetails.icon;
                     break;
                 case "Gizmo":
-                    var apiGizmoItemDetails = JsonConvert.DeserializeObject<Gizmo.RootObject>(apiResponse);
+                    var apiGizmoItemDetails = JsonConvert.DeserializeObject<Gizmo.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiGizmoItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiGizmoItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiGizmoItemDetails.type + "\n";
@@ -311,7 +305,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiGizmoItemDetails.icon;
                     break;
                 case "MiniPet":
-                    var apiMiniPetItemDetails = JsonConvert.DeserializeObject<MiniPet.RootObject>(apiResponse);
+                    var apiMiniPetItemDetails = JsonConvert.DeserializeObject<MiniPet.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiMiniPetItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiMiniPetItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiMiniPetItemDetails.type + "\n";
@@ -320,7 +314,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiMiniPetItemDetails.icon;
                     break;
                 case "Tool":
-                    var apiToolItemDetails = JsonConvert.DeserializeObject<Tool.RootObject>(apiResponse);
+                    var apiToolItemDetails = JsonConvert.DeserializeObject<Tool.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiToolItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiToolItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiToolItemDetails.type + "\n";
@@ -329,7 +323,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiToolItemDetails.icon;
                     break;
                 case "Trinket":
-                    var apiTrinketItemDetails = JsonConvert.DeserializeObject<Trinket.RootObject>(apiResponse);
+                    var apiTrinketItemDetails = JsonConvert.DeserializeObject<Trinket.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiTrinketItemDetails.name + "\n";
                     ItemDetailsText += "Item type: " + apiTrinketItemDetails.type + "\n";
                     ItemDetailsText += "Rarity: " + apiTrinketItemDetails.rarity + "\n";
@@ -337,7 +331,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiTrinketItemDetails.icon;
                     break;
                 case "Trophy":
-                    var apiTrophyItemDetails = JsonConvert.DeserializeObject<Trophy.RootObject>(apiResponse);
+                    var apiTrophyItemDetails = JsonConvert.DeserializeObject<Trophy.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiTrophyItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiTrophyItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiTrophyItemDetails.type + "\n";
@@ -346,7 +340,7 @@ namespace Gw2Sharp.ViewModels
                     ItemIconLink = apiTrophyItemDetails.icon;
                     break;
                 case "UpgradeComponent":
-                    var apiUpgradeComponentItemDetails = JsonConvert.DeserializeObject<UpgradeComponent.RootObject>(apiResponse);
+                    var apiUpgradeComponentItemDetails = JsonConvert.DeserializeObject<UpgradeComponent.RootObject>(ApiResponse);
                     ItemDetailsText = "Name: " + apiUpgradeComponentItemDetails.name + "\n";
                     ItemDetailsText += "Description: " + apiUpgradeComponentItemDetails.description + "\n";
                     ItemDetailsText += "Item type: " + apiUpgradeComponentItemDetails.type + "\n";
@@ -360,6 +354,44 @@ namespace Gw2Sharp.ViewModels
                     return;
             }
             IsResponseTextLayoutVisible = true;
+        }
+
+        // gets API item details response
+        async Task<bool> GetApiItemDetailsResponse(string apiItemLink)
+        {
+            try
+            {
+                ApiResponse = await InternetConnection.client.GetStringAsync(apiItemLink);
+            }
+            catch (HttpRequestException)
+            {
+                TradingPostStatusText = "No such id";
+                IsTradingPostStatusTextVisible = true;
+                return false;
+            }
+            catch (Exception)
+            {
+                TradingPostStatusText = "Unknown exception!";
+                IsTradingPostStatusTextVisible = true;
+                return false;
+            }
+            return true;
+        }
+
+        // gets item type from API response
+        bool GetItemType()
+        {
+            try
+            {
+                ApiResponseItemType = JsonConvert.DeserializeObject<ItemType>(ApiResponse);
+            }
+            catch (JsonSerializationException)
+            {
+                TradingPostStatusText = "JsonSerialization exception!";
+                IsTradingPostStatusTextVisible = true;
+                return false;
+            }
+            return true;
         }
 
         // method used for copying item chatlink to clipboard via button press

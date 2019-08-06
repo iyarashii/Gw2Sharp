@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
-using Xamarin.Forms;
 using System.Runtime.CompilerServices;
 
 namespace Gw2Sharp.ViewModels
 {
+    // base class for all viewmodels in this app, implements INotifyPropertyChanged interface and basic view model methods
     public class BaseViewModel : INotifyPropertyChanged
     {
         bool isBusy = false;

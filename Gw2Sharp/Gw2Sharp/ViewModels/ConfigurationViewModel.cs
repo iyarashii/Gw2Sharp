@@ -2,51 +2,57 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Gw2Sharp.Models.DTOs;
-using Gw2Sharp.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
+using Gw2Sharp.Models;
+using Gw2Sharp.Models.DTOs;
 
 namespace Gw2Sharp.ViewModels
 {
     public class ConfigurationViewModel : BaseViewModel
     {
-        // property used for storing number of item api pages
+        // stores the number of item API pages
         public int MaxApiPages { get; set; }
 
-        // property used as a flag, that shows whether app is currently sending GET requests to the GW2 API
-        public bool GettingApiResponses { get; set; }
+        // stores a flag that shows whether the app is currently sending GET requests to the GW2 API
+        public bool GettingApiResponses { get; set; } = false;
+
+        // binding properties
         public string SaveItemDBButtonText { get; set; } = "Update local item name & id database";
         public string ConfigurationStatusText { get; set; }
 
-        public ICommand SaveItemDBCommand { get; set; }
-        public ICommand DeleteItemDBCommand { get; set; }
-        public ICommand StopButtonCommand { get; set; }
+        // command properties
+        public Command SaveItemDBCommand { get; set; }
+        public Command ClearItemDBCommand { get; set; }
+        public Command StopButtonCommand { get; set; }
 
+        // constructor
         public ConfigurationViewModel()
         {
-            GettingApiResponses = false;
-
-            // create command for asynchronous method
+            // create commands with their execute and canExecute methods
             SaveItemDBCommand = new Command(async () => await ExecuteSaveItemDBCommand(), () =>
             {
                 return !GettingApiResponses;
             }
             );
 
-            DeleteItemDBCommand = new Command( () =>  ExecuteDeleteItemDBCommand());
+            ClearItemDBCommand = new Command( () =>  ExecuteClearItemDBCommand(), () => 
+            {
+                return !GettingApiResponses;
+            }
+            );
 
             StopButtonCommand = new Command(() => ExecuteStopButtonCommand(), () => 
             {
                 return GettingApiResponses;
             });
 
-            (StopButtonCommand as Command).ChangeCanExecute();
+            // ensure that stop button is disabled on page creation
+            StopButtonCommand.ChangeCanExecute();
         }
 
-        // method that gets the current number of max api pages from api
+        // get the current number of max API pages from API
         async Task GetApiMaxPages()
         {
             string apiPagesLink = @"https://api.guildwars2.com/v2/items?page=-1&page_size=200";
@@ -73,13 +79,13 @@ namespace Gw2Sharp.ViewModels
             if (!int.TryParse(contentString, out int maxApiPages))
             {
                 ConfigurationStatusText = "Error occured while parsing to int!";
-                //statusText.Text = contentString;
+                //statusText.Text = contentString;  // used for debugging
                 return;
             }
             MaxApiPages = maxApiPages;
         }
 
-        // event handler that saves item name & id values from api to a local file on saveItemDB button click
+        // event handler that saves item name & id values from API to a local database on saveItemDB button click
         async Task ExecuteSaveItemDBCommand()
         {
             // check internet connection
@@ -89,14 +95,17 @@ namespace Gw2Sharp.ViewModels
                 return;
             }
 
-            // set a flag that tells GET request are being send
+            // set a flag that tells GET request are being sent
             GettingApiResponses = true;
-            (SaveItemDBCommand as Command).ChangeCanExecute();
+            SaveItemDBCommand.ChangeCanExecute();
 
             // enable stop button
-            (StopButtonCommand as Command).ChangeCanExecute();
+            StopButtonCommand.ChangeCanExecute();
 
-            // get number of max api pages
+            // disable clear button
+            ClearItemDBCommand.ChangeCanExecute();
+
+            // get number of max API pages
             await GetApiMaxPages();
 
             // get item names and ids; check if it was successful
@@ -106,13 +115,14 @@ namespace Gw2Sharp.ViewModels
             // change button text
             SaveItemDBButtonText = "Done! Click again to redownload";
 
-            // change flag to signal that GET requests are no longer being send
+            // change flag to signal that GET requests are no longer being sent
             GettingApiResponses = false;
-            (SaveItemDBCommand as Command).ChangeCanExecute();
-            (StopButtonCommand as Command).ChangeCanExecute();
+            SaveItemDBCommand.ChangeCanExecute();
+            StopButtonCommand.ChangeCanExecute();
+            ClearItemDBCommand.ChangeCanExecute();
         }
 
-        // method that asynchronously sends GET requests to the api to receive 200 JSONs per request
+        // method that asynchronously sends GET requests to the API to receive 200 JSONs per request
         async Task<bool> GetItemNamesAndIds()
         {
             string apiResponse;
@@ -141,38 +151,38 @@ namespace Gw2Sharp.ViewModels
                     return false;
                 }
                 SaveItemDBButtonText = "Getting api responses in progress... " + "(" + i + "/" + MaxApiPages + ")";
-                await DeserializeAndAppendToFile(apiResponse);
+                await DeserializeAndAddToDatabase(apiResponse);
             }
             return true;
         }
 
-        //  deserializes JSONs and appends ids and names from them to a text file
-        async Task DeserializeAndAppendToFile(string apiResponse)
+        //  deserializes JSONs and adds ids and names from them to the database
+        async Task DeserializeAndAddToDatabase(string apiResponse)
         {
             List<ItemNamesAndIds> itemNamesAndIds = JsonConvert.DeserializeObject<List<ItemNamesAndIds>>(apiResponse);
             await App.Database.SaveItemsAndIdsAsync(itemNamesAndIds);
         }
 
-        // method that deletes local file that stores item name & id values from api
-        //async Task ExecuteDeleteItemDBCommand()
-        void ExecuteDeleteItemDBCommand()
+        // clears local database
+        void ExecuteClearItemDBCommand()
         {
-            //await App.Database.ClearAsync();
             App.Database.ClearItemNamesAndIdsTable();
             ConfigurationStatusText = "Database cleared!";
         }
 
-        // method that changes GettingApiResponses value to prevent sending GET requests to api
+        // changes GettingApiResponses value to prevent sending GET requests to API
         void ExecuteStopButtonCommand()
         {
-            //List<ItemNamesAndIds> test = await App.Database.GetPeopleAsync();
+            //List<ItemNamesAndIds> test = await App.Database.GetPeopleAsync(); // used for debugging
             //for (int x = 0; x < test.Count; x++)
             //{
             //    ConfigurationStatusText += test[x].id;
             //    ConfigurationStatusText += " " + test[x].name + "\n";
             //}
             GettingApiResponses = false;
-            (StopButtonCommand as Command).ChangeCanExecute();
+            StopButtonCommand.ChangeCanExecute();
+            ClearItemDBCommand.ChangeCanExecute();
+            SaveItemDBCommand.ChangeCanExecute();
         }
     }
 }

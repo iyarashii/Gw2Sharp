@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Gw2Sharp.Models.DTOs;
@@ -13,6 +11,7 @@ namespace Gw2Sharp.ViewModels
     public class GemExchangeViewModel : BaseViewModel
     {
         // properties used for storing text values for different Labels
+        #region BindingProperties
         public string GemToGoldExchangeStatusText { get; set; }
         public string SendGoldText { get; set; }
         public string ReceiveGemText { get; set; }
@@ -28,8 +27,9 @@ namespace Gw2Sharp.ViewModels
 
         // property that stores bool value for status text visibility
         public bool IsGemToGoldExchangeStatusTextVisible { get; set; }
+        #endregion
 
-        // property that stores deserialized data from api response
+        // stores deserialized data from API response
         public GemExchangeRate ApiResponse { get; set; }
 
         // command properties
@@ -42,11 +42,11 @@ namespace Gw2Sharp.ViewModels
             IsResponseLayoutVisible = false;
             IsGemToGoldExchangeStatusTextVisible = false;
 
-            // create command for asynchronous method
+            // create command for asynchronous execute method
             CalculateGoldToGemsCommand = new Command(async () => await ExecuteCalculateGoldToGemsCommand());
         }
 
-        // method that calculates and shows gold to gem exchange rate when calculateGoldToGem button is clicked
+        // calculates and displays gold to gem exchange rate
         async Task ExecuteCalculateGoldToGemsCommand()
         {
 
@@ -70,25 +70,24 @@ namespace Gw2Sharp.ViewModels
             // set parsed value from entry to coins variable
             double coins = CheckIfGoldAmountIsValid();
 
-            // get api response and check if it was a success
+            // get API response and check if it was a success
             bool apiResponseSuccess = await GetApiResponse(coins);
 
-            // set status text visibilty to true to show possible errors
-            // set status text visibilty to true to show possible errors
+            // set status text visibility to true to show possible errors
             IsGemToGoldExchangeStatusTextVisible = true;
 
-            // if api response returned error end method execution here
-            if (apiResponseSuccess == false) return;
+            // if API response returned error end method execution here
+            if (!apiResponseSuccess) return;
 
-            // show responseTextLayout to show images and values from api
+            // show responseTextLayout to show images and values from API
             IsResponseLayoutVisible = true;
 
-            // assign received values from api to the correct properties 
+            // assign received values from API to the correct properties 
             SetValuesFromApiData(coins);
             return;
         }
 
-        // method that assigns values from api to label.text properties
+        // assigns values from API to labels text properties
         void SetValuesFromApiData(double coins)
         {
             SendGoldText = "Send: " + coins / 10000.0;
@@ -101,7 +100,7 @@ namespace Gw2Sharp.ViewModels
             PriceOf2000Gems = "you have to pay about " + goldPerGemRatio * 2000;
         }
 
-        // method that tries parsing goldAmount entry value to double and returns parsed value
+        // tries to parse goldAmount entry value to double and returns parsed value
         double CheckIfGoldAmountIsValid()
         {
             if (!double.TryParse(GoldAmount, out double coins))
@@ -114,15 +113,15 @@ namespace Gw2Sharp.ViewModels
             return coins;
         }
 
-        // async method that gets api response string and deserializes it
+        // gets api response string and deserializes it
         async Task<bool> GetApiResponse(double coins)
         {
 
             string apiResponseString;
             string apiGemLink = "https://api.guildwars2.com/v2/commerce/exchange/coins?quantity=" + coins;
 
-            // dont show error message if
-            if(coins == -1)
+            // don't show the error message if goldAmount entry value is not a number
+            if (coins == -1)
             {
                 return false;
             }
