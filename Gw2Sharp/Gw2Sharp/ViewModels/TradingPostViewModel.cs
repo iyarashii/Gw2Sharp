@@ -87,7 +87,7 @@ namespace Gw2Sharp.ViewModels
 
             // check internet connection
             TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText);
-            if (!InternetConnection.connection)
+            if (!InternetConnection.Connection)
             {
                 IsTradingPostStatusTextVisible = true;
                 return;
@@ -117,10 +117,10 @@ namespace Gw2Sharp.ViewModels
             var apiItemPriceResponse = JsonConvert.DeserializeObject<ItemTpPrice.RootObject>(apiResponse);
 
             // display item BUYS listings price 
-            DisplayItemPrice(apiItemPriceResponse.buys.unit_price.ToString(), true);
+            DisplayItemPrice(apiItemPriceResponse.buys.unit_price, true);
 
             // display item SELLS listings price
-            DisplayItemPrice(apiItemPriceResponse.sells.unit_price.ToString(), false);
+            DisplayItemPrice(apiItemPriceResponse.sells.unit_price, false);
 
             ItemPriceText = "Buy orders:\n" + "Quantity: " + apiItemPriceResponse.buys.quantity;
             ItemSellsPriceText = "Sell orders:\n" + "Quantity: " + apiItemPriceResponse.sells.quantity;
@@ -129,57 +129,50 @@ namespace Gw2Sharp.ViewModels
         }
 
         // displays item price broken down into gold, silver and copper coins
-        void DisplayItemPrice(string itemUnitPrice, bool buys)
+        void DisplayItemPrice(int itemUnitPrice, bool buys)
         {
-            string copperUnitPrice, silverUnitPrice = null, goldUnitPrice = null;
+            int? copperUnitPrice, silverUnitPrice = null, goldUnitPrice = null;
 
-            if (itemUnitPrice.Length >= 2)
+            copperUnitPrice = itemUnitPrice / 10 % 10 * 10 + itemUnitPrice % 10;
+            if(itemUnitPrice > 99)
             {
-                copperUnitPrice = itemUnitPrice.Substring(itemUnitPrice.Length - 2);
+                silverUnitPrice = itemUnitPrice / 1000 % 10 * 10 + itemUnitPrice / 100 % 10;
 
-                if (itemUnitPrice.Length >= 3)
+                if (buys)
                 {
-                    if (itemUnitPrice.Length == 3)
-                        silverUnitPrice = itemUnitPrice.Substring(itemUnitPrice.Length - 3, 1);
-                    else silverUnitPrice = itemUnitPrice.Substring(itemUnitPrice.Length - 4, 2);
-
-                    if (buys)
-                    {
-                        IsBuysSilverCoinImageVisible = true;
-                    }
-                    else
-                    {
-                        IsSellsSilverCoinImageVisible = true;
-                    }
-
-                    if (itemUnitPrice.Length > 4)
-                    {
-                        goldUnitPrice = itemUnitPrice.Substring(0, itemUnitPrice.Length - 4);
-
-                        if (buys)
-                        {
-                            IsBuysGoldCoinImageVisible = true;
-                        }
-                        else
-                        {
-                            IsSellsGoldCoinImageVisible = true;
-                        }
-                    }
+                    IsBuysSilverCoinImageVisible = true;
+                }
+                else
+                {
+                    IsSellsSilverCoinImageVisible = true;
                 }
             }
-            else copperUnitPrice = itemUnitPrice;
+            if (itemUnitPrice > 9999)
+            {
+                goldUnitPrice = itemUnitPrice / 10_000;
+
+                if (buys)
+                {
+                    IsBuysGoldCoinImageVisible = true;
+                }
+                else
+                {
+                    IsSellsGoldCoinImageVisible = true;
+                }
+
+            }
 
             if (buys)
             {
-                BuysGoldText = goldUnitPrice;
-                BuysSilverText = silverUnitPrice;
-                BuysCopperText = copperUnitPrice;
+                BuysGoldText = goldUnitPrice.ToString();
+                BuysSilverText = silverUnitPrice.ToString();
+                BuysCopperText = copperUnitPrice.ToString();
             }
             else
             {
-                SellsGoldText = goldUnitPrice;
-                SellsSilverText = silverUnitPrice;
-                SellsCopperText = copperUnitPrice;
+                SellsGoldText = goldUnitPrice.ToString();
+                SellsSilverText = silverUnitPrice.ToString();
+                SellsCopperText = copperUnitPrice.ToString();
             }
         }
 
@@ -202,7 +195,7 @@ namespace Gw2Sharp.ViewModels
 
             // check internet connection
             TradingPostStatusText = InternetConnection.CheckForInternetConnection(TradingPostStatusText);
-            if (!InternetConnection.connection)
+            if (!InternetConnection.Connection)
             {
                 IsTradingPostStatusTextVisible = true;
                 return;
