@@ -61,7 +61,7 @@ namespace Gw2Sharp.ViewModels
 
             // check internet connection
             GemToGoldExchangeStatusText = InternetConnection.CheckForInternetConnection(GemToGoldExchangeStatusText);
-            if (!InternetConnection.connection)
+            if (!InternetConnection.Connection)
             {
                 IsGemToGoldExchangeStatusTextVisible = true;
                 return;

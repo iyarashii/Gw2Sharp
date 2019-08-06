@@ -90,7 +90,7 @@ namespace Gw2Sharp.ViewModels
         {
             // check internet connection
             ConfigurationStatusText = InternetConnection.CheckForInternetConnection(ConfigurationStatusText);
-            if (!InternetConnection.connection)
+            if (!InternetConnection.Connection)
             {
                 return;
             }

@@ -9,8 +9,8 @@ namespace Gw2Sharp.Models
         // initializing a read-only instance of HttpClient to give the app access to HTTP GET requests
         public static readonly HttpClient client = new HttpClient();
 
-        // field that stores the result of the internet connection test
-        public static bool connection;
+        // stores the result of the internet connection test
+        public static bool Connection { get; set; }
 
         // checks internet connection by trying to open readable stream from the site
         public static bool CheckWebResponse()
@@ -38,10 +38,10 @@ namespace Gw2Sharp.Models
         {
             if (!CheckWebResponse())
             {
-                connection = false;
+                Connection = false;
                 return "No internet connection!";
             }
-            connection = true;
+            Connection = true;
             return labelsTextProperty;
         }
     }
