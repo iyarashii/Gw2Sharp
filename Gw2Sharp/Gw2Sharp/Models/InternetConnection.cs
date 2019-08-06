@@ -18,8 +18,8 @@ namespace Gw2Sharp.Models
             
             try
             {
-                using (var client = new WebClient())
-                using (client.OpenRead("http://www.google.com/"))
+                using (var webClient = new WebClient())
+                using (webClient.OpenRead("http://www.google.com/"))
                 {
                     return true;
                 }
