@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
+﻿using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
-using Android.Widget;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 
@@ -35,8 +27,10 @@ namespace Gw2Sharp.Droid.Controls
             Control.ShowSoftInputOnFocus = false;
             Control.SetTextIsSelectable(true);
             Control.CustomSelectionActionModeCallback = new CustomSelectionActionModeCallback();
-            // TO DO: do something to prevent pasting text into the label
-            //Control.CustomInsertionActionModeCallback = new CustomInsertionActionModeCallback();
+            if(Build.VERSION.SdkInt >= BuildVersionCodes.M)
+            {
+                Control.CustomInsertionActionModeCallback = new CustomInsertionActionModeCallback();
+            }
         }
         protected override FormsEditText CreateNativeControl() => new CustomEditText(Context);
 
@@ -44,7 +38,7 @@ namespace Gw2Sharp.Droid.Controls
         {
             public bool OnCreateActionMode(ActionMode mode, IMenu menu) => false;
 
-            public bool OnActionItemClicked(ActionMode m, IMenuItem i) => false;
+            public bool OnActionItemClicked(ActionMode mode, IMenuItem item) => false;
 
             public bool OnPrepareActionMode(ActionMode mode, IMenu menu) => true;
 
@@ -55,7 +49,7 @@ namespace Gw2Sharp.Droid.Controls
         {
             private const int CopyId = Android.Resource.Id.Copy;
 
-            public bool OnActionItemClicked(ActionMode m, IMenuItem i) => false;
+            public bool OnActionItemClicked(ActionMode mode, IMenuItem item) => false;
 
             public bool OnCreateActionMode(ActionMode mode, IMenu menu) => true;
 
