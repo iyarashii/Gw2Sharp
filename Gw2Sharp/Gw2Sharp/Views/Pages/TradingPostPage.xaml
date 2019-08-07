@@ -15,7 +15,7 @@
         <local:TradingPostViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <ScrollView>
+        <ScrollView Orientation="Both">
         <StackLayout>
             <Label x:Name="enterItemNameText"  Text="Enter item name to check its Trading Post price:"/>
             <Entry x:Name="itemName" Text="{Binding ItemNameEntryText, Mode=TwoWay}" />
@@ -36,11 +36,15 @@
                         <StackLayout Orientation="Horizontal">
                             <Label Text="Unit price:" HorizontalOptions="Start" />
                             <Label x:Name="buysGoldText" Text="{Binding BuysGoldText}" HorizontalOptions="Start" />
-                            <Image x:Name="buysGoldCoinImage" Source="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png" HorizontalOptions="Start" IsVisible="{Binding IsBuysGoldCoinImageVisible}"/>
+                            <Image x:Name="buysGoldCoinImage" Source="https://wiki.guildwars2.com/images/d/d1/Gold_coin.png" HeightRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" 
+                                   WidthRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" HorizontalOptions="Start" IsVisible="{Binding IsBuysGoldCoinImageVisible}"/>
                             <Label x:Name="buysSilverText" Text="{Binding BuysSilverText}" HorizontalOptions="Start" />
-                            <Image x:Name="buysSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png" HorizontalOptions="Start" IsVisible="{Binding IsBuysSilverCoinImageVisible}"/>
+                            <Image x:Name="buysSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png"
+                                   HeightRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" 
+                                   WidthRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" HorizontalOptions="Start" IsVisible="{Binding IsBuysSilverCoinImageVisible}"/>
                             <Label x:Name="buysCopperText" Text="{Binding BuysCopperText}" HorizontalOptions="Start" />
-                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png" HorizontalOptions="Start"/>
+                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png" HeightRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" 
+                                   WidthRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" HorizontalOptions="Start"/>
                         </StackLayout>
                     <Label x:Name="itemSellsPriceText" Text="{Binding ItemSellsPriceText}"/>
                         <StackLayout Orientation="Horizontal">
@@ -50,9 +54,12 @@
                                    HeightRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" 
                                    WidthRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" HorizontalOptions="StartAndExpand" IsVisible="{Binding IsSellsGoldCoinImageVisible}"/>
                             <Label x:Name="sellsSilverText" Text="{Binding SellsSilverText}" HorizontalOptions="Start" />
-                            <Image x:Name="sellsSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png" HorizontalOptions="Start" IsVisible="{Binding IsSellsSilverCoinImageVisible}"/>
+                            <Image x:Name="sellsSilverCoinImage" Source="https://wiki.guildwars2.com/images/3/3c/Silver_coin.png"
+                                   HeightRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" 
+                                   WidthRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" HorizontalOptions="Start" IsVisible="{Binding IsSellsSilverCoinImageVisible}"/>
                             <Label x:Name="sellsCopperText" Text="{Binding SellsCopperText}" HorizontalOptions="Start" />
-                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png" HorizontalOptions="Start"/>
+                            <Image Source="https://wiki.guildwars2.com/images/e/eb/Copper_coin.png" HeightRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" 
+                                   WidthRequest="{Binding Source={x:Reference enterItemNameText}, Path=FontSize}" HorizontalOptions="Start"/>
                         </StackLayout>
                     </StackLayout>
             </StackLayout>
