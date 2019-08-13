@@ -15,7 +15,7 @@
                 <Button x:Name="saveItemDB" Text="{Binding SaveItemDBButtonText}" Command="{Binding SaveItemDBCommand}" />
                 <Button x:Name="stopButton" Text="Stop" Command="{Binding StopButtonCommand}"/>
                 <Button x:Name="clearItemDB" Text="Clear local database" Command="{Binding ClearItemDBCommand}" />
-                <Label x:Name="statusText" Text="{Binding ConfigurationStatusText}"/>
+                <Label x:Name="statusText" Text="{Binding ConfigurationStatusText}" HorizontalOptions="CenterAndExpand"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

@@ -15,6 +15,7 @@ namespace Gw2Sharp.Models
         {
             _database = new SQLiteAsyncConnection(dbPath);
             _database.CreateTableAsync<ItemNamesAndIds>().Wait();
+            _database.CreateTableAsync<LastApiPageNumber>().Wait();
         }
 
         // returns the item with the same name as the name passed as a parameter
@@ -39,6 +40,18 @@ namespace Gw2Sharp.Models
         {
              _database.DropTableAsync<ItemNamesAndIds>().Wait();
              _database.CreateTableAsync<ItemNamesAndIds>().Wait();
+             _database.DropTableAsync<LastApiPageNumber>().Wait();
+             _database.CreateTableAsync<LastApiPageNumber>().Wait();
+        }
+
+        public async Task SaveLastDownloadedPageNumber(LastApiPageNumber pageNumber)
+        {
+            await _database.InsertOrReplaceAsync(pageNumber);
+        }
+
+        public Task<LastApiPageNumber> GetLastDownloadedPageNumber()
+        {
+            return _database.Table<LastApiPageNumber>().FirstOrDefaultAsync();
         }
     }
 }
