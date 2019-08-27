@@ -13,6 +13,7 @@ namespace Gw2Sharp.Models
         public static bool Connection { get; set; }
 
         // checks internet connection by trying to open readable stream from the site
+        // TODO: change to async
         public static bool CheckWebResponse()
         {
             
@@ -34,7 +35,7 @@ namespace Gw2Sharp.Models
         /// </summary>
         /// <param name="labelsTextProperty">Text property of a label which will be changed when no internet connection is available.</param>
         /// <returns></returns>
-        public static string CheckForInternetConnection(string labelsTextProperty)
+        public static string CheckForInternetConnection(string labelsTextProperty) // TODO: change to async
         {
             if (!CheckWebResponse())
             {

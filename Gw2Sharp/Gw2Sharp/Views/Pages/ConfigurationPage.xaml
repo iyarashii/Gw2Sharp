@@ -16,6 +16,8 @@
                 <Button x:Name="stopButton" Text="Stop" Command="{Binding StopButtonCommand}"/>
                 <Button x:Name="clearItemDB" Text="Clear local database" Command="{Binding ClearItemDBCommand}" />
                 <Label x:Name="statusText" Text="{Binding ConfigurationStatusText}" HorizontalOptions="CenterAndExpand"/>
+                <ProgressBar x:Name="databaseUpdateProgress" Progress="{Binding PercentageComplete}" ProgressColor="Green"/>
+                <Label x:Name="resultsText" Text="{Binding ResultsText}"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
