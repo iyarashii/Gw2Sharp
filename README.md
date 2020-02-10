@@ -26,5 +26,5 @@ Build the solution with Visual Studio 2017 or newer.
 1. Download the newest [apk](https://github.com/iyarashii/Gw2Sharp/releases/download/v1.0.0.0/iyarashii.github.Gw2Sharp.apk) to your Android device.
 2. Run the apk on the device.
 # Usage
-After successful installation run the app go to '*Settings*' and click '*Update local item name & id database*' wait for it to finish.   
+After successful installation run the app, go to '*Settings*' and click '*Update local item name & id database*' wait for it to finish.   
 You should repeat this action after every Guild Wars 2 update to keep the local database up-to-date.
