@@ -25,6 +25,26 @@ Build the solution with Visual Studio 2017 or newer.
 ### Follow these steps to install on Android:
 1. Download the newest [apk](https://github.com/iyarashii/Gw2Sharp/releases/download/v1.0.0.0/iyarashii.github.Gw2Sharp.apk) to your Android device.
 2. Run the apk on the device.
-# Usage
-After successful installation run the app, go to '*Settings*' and click '*Update local item name & id database*' wait for it to finish.   
+# Updating database
+After successful installation run the app, go to `Settings` and click `Update local item name & id database` wait for it to finish.   
 You should repeat this action after every Guild Wars 2 update to keep the local database up-to-date.
+
+Setting Menu:
+![Settings menu image](https://i.imgur.com/qddubY8.png)
+During update:
+![Download progress image](https://i.imgur.com/nZAzn7c.png)
+After successful update:
+![Update finished image](https://i.imgur.com/tEoSQFv.png)
+# Usage
+Currently this app has two main functions: you can check recent gold to gem ratio from in-game currency exchange
+and browse item details and prices by typing item names and checking Trading Post's API data.
+## Below are the screenshots of this app's main features
+1. Splash screen:
+![Splash screen image](https://i.imgur.com/co2qpnf.png)
+2. Main menu:
+![Main menu image](https://i.imgur.com/K4uIPej.png)
+3. Gem exchange feature:
+![Gem exchange feature image](https://i.imgur.com/R6sWHem.png)
+4. Trading Post feature:
+![Trading Post feature image](https://i.imgur.com/x2REBuF.png)
+![Trading post feature 2nd image](https://i.imgur.com/8EMxgmm.png)
