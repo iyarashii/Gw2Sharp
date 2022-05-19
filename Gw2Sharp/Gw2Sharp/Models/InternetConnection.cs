@@ -1,4 +1,8 @@
-﻿using System.Net.Http;
+﻿// Copyright (c) 2022 iyarashii @ https://github.com/iyarashii 
+// Licensed under the GNU General Public License v3.0,
+// go to https://github.com/iyarashii/Gw2Sharp/blob/master/LICENSE for license details.
+
+using System.Net.Http;
 using System.Net;
 
 namespace Gw2Sharp.Models
