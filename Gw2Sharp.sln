@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2003
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gw2Sharp.Android", "Gw2Sharp\Gw2Sharp.Android\Gw2Sharp.Android.csproj", "{D8B1459E-ED55-42A9-83DF-49E452C10561}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gw2Sharp.UWP", "Gw2Sharp\Gw2Sharp.UWP\Gw2Sharp.UWP.csproj", "{2157094A-A95A-4DA2-B287-C4C688290594}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gw2Sharp", "Gw2Sharp\Gw2Sharp\Gw2Sharp.csproj", "{728DEBC5-64FD-4FB1-B5D6-22802538D55B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0CDFFBCC-4F36-40EE-86D8-5DFF2CBB68C6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
