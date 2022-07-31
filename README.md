@@ -1,4 +1,5 @@
 # Gw2Sharp
+![Trading post feature 2nd image](https://i.imgur.com/8EMxgmm.png)
 Gw2Sharp is a Xamarin.Forms app used to display data from the Guild Wars 2 API.  
 For now, it lets you check recent gold to gem ratio from in-game currency exchange.
 This app also allows you to browse item details by typing item names and checking item's API data.  
